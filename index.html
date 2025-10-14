@@ -72,6 +72,7 @@
             width: 100%;
         }
         
+        /* The ornament is kept for dividers/card icons, but the header uses the PNG logos */
         .ornament {
             background: linear-gradient(135deg, #D4AF37 0%, #F4E4C1 100%);
             clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
@@ -90,13 +91,14 @@
             box-shadow: 0 8px 32px rgba(139, 0, 0, 0.1);
         }
         
+        /* Apply floating to the main Ganesha logo */
         .floating {
             animation: float 6s ease-in-out infinite;
         }
         
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
+            50% { transform: translateY(-10px); }
         }
         
         .shimmer {
@@ -141,7 +143,7 @@
             content: '';
             position: absolute;
             top: 50%;
-            width: 45%;
+            width: 40%; /* Adjusted for TH logo width */
             height: 2px;
             background: linear-gradient(90deg, transparent, #D4AF37, transparent);
         }
@@ -247,7 +249,8 @@
             await signInWithPopup(auth, provider);
         } catch (error) {
             console.error("Sign-in error:", error);
-            alert("Sign-in failed. Please try again.");
+            // Replaced alert() with a console message/custom UI element, but for brevity here:
+            console.log("Sign-in failed. Please try again.");
         }
     };
 
@@ -281,7 +284,7 @@
         if (!currentUser) {
             container.innerHTML = `
                 <div class="glass-card rounded-3xl p-12 text-center max-w-md mx-auto">
-                    <div class="ornament w-16 h-16 mx-auto mb-6"></div>
+                    <img src="./assets/logo-ganesh.png" alt="Lord Ganesha" class="w-16 h-auto mx-auto mb-6">
                     <h3 class="text-3xl font-display text-royal-maroon mb-4">Welcome</h3>
                     <p class="text-gray-700 mb-8 font-body text-lg">Please sign in to view the invitation and RSVP</p>
                     <button onclick="signInWithGoogle()" class="btn-royal text-white px-8 py-4 rounded-full font-sans font-medium shadow-lg w-full">
@@ -294,6 +297,7 @@
 
         container.innerHTML = `
             <div class="glass-card rounded-3xl overflow-hidden">
+                <!-- User Header -->
                 <div class="bg-gradient-to-r from-royal-maroon to-rose-gold p-6 text-white">
                     <div class="flex justify-between items-center flex-wrap gap-4">
                         <div>
@@ -306,6 +310,7 @@
                     </div>
                 </div>
 
+                <!-- Tabs -->
                 <div class="border-b border-gray-200 px-6 bg-white/50">
                     <div class="flex gap-2 overflow-x-auto">
                         <button onclick="switchTab('rsvp')" class="tab-button active text-royal-maroon font-semibold px-6 py-4 font-sans">
@@ -314,19 +319,38 @@
                         <button onclick="switchTab('itinerary')" class="tab-button text-gray-600 px-6 py-4 font-sans">
                             <i class="fas fa-calendar-alt mr-2"></i>Schedule
                         </button>
+                        <button onclick="switchTab('details')" class="tab-button text-gray-600 px-6 py-4 font-sans">
+                            <i class="fas fa-shirt mr-2"></i>Details & Dress Code
+                        </button>
                         ${isAdmin ? `<button onclick="switchTab('admin')" class="tab-button text-gray-600 px-6 py-4 font-sans">
                             <i class="fas fa-chart-bar mr-2"></i>Admin
                         </button>` : ''}
                     </div>
                 </div>
 
+                <!-- Tab Content -->
                 <div class="p-6 md:p-10">
                     <div id="tab-rsvp" class="tab-content">${renderRSVP()}</div>
                     <div id="tab-itinerary" class="tab-content hidden">${renderItinerary()}</div>
+                    <div id="tab-details" class="tab-content hidden">${renderDetails()}</div>
                     ${isAdmin ? `<div id="tab-admin" class="tab-content hidden">${renderAdmin()}</div>` : ''}
                 </div>
             </div>
         `;
+        // Ensure the correct tab is active after UI update
+        if (activeTab) switchTab(activeTab);
+    };
+
+    // Helper for Performance input toggle
+    window.onload = () => {
+        updateCountdown();
+        updateUI();
+        document.addEventListener('change', (e) => {
+            if (e.target.id === 'isPerforming') {
+                document.getElementById('performanceDetails').disabled = !e.target.checked;
+                document.getElementById('performanceDetails').focus();
+            }
+        });
     };
 
     // RSVP Form
@@ -336,6 +360,7 @@
                 <h2 class="text-4xl font-display text-royal-maroon mb-8 text-center">Your Presence is Requested</h2>
                 
                 <form id="rsvp-form" class="space-y-6">
+                    <!-- Basic Info -->
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Full Name *</label>
@@ -352,6 +377,7 @@
                         <input type="email" name="email" value="${currentUser.email}" readonly class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-gray-50">
                     </div>
                     
+                    <!-- Side and Attendance -->
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Which side are you from? *</label>
@@ -371,6 +397,7 @@
                         </div>
                     </div>
 
+                    <!-- Events Checkbox -->
                     <div>
                         <label class="block text-sm font-sans font-medium text-gray-700 mb-3">Which events will you attend? *</label>
                         <div class="space-y-3">
@@ -380,7 +407,7 @@
                             </label>
                             <label class="flex items-center p-3 rounded-xl hover:bg-gold/10 transition cursor-pointer">
                                 <input type="checkbox" name="events" value="Sangeet" class="w-5 h-5 text-royal-maroon rounded">
-                                <span class="ml-3">Nov 29: Sangeet Night</span>
+                                <span class="ml-3">Nov 29: Sangeet Night & Performances</span>
                             </label>
                             <label class="flex items-center p-3 rounded-xl hover:bg-gold/10 transition cursor-pointer">
                                 <input type="checkbox" name="events" value="Wedding" class="w-5 h-5 text-royal-maroon rounded">
@@ -388,7 +415,18 @@
                             </label>
                         </div>
                     </div>
+                    
+                    <!-- Reception Performance (New Field) -->
+                    <div>
+                        <label class="flex items-center p-3 rounded-xl hover:bg-gold/10 transition cursor-pointer mb-2">
+                            <input type="checkbox" name="isPerforming" id="isPerforming" class="w-5 h-5 text-royal-maroon rounded">
+                            <span class="ml-3 font-sans font-medium text-gray-700">I would like to give a performance (Sangeet/Reception)</span>
+                        </label>
+                        <input type="text" name="performanceDetails" id="performanceDetails" placeholder="e.g., Song Name, Type of Dance, or Contact Person" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition mt-2 disabled:bg-gray-100" disabled>
+                    </div>
 
+
+                    <!-- Travel & Accommodation -->
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Need Accommodation? *</label>
@@ -403,6 +441,7 @@
                         </div>
                     </div>
                     
+                    <!-- Travel Arrangement Fields -->
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Travel Arrangement/Pick-up Needed? *</label>
@@ -418,6 +457,8 @@
                             <input type="date" name="arrivalDate" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
                         </div>
                     </div>
+                    <!-- End Travel Arrangement Fields -->
+
                     <div>
                         <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Special Requests or Dietary Requirements</label>
                         <textarea name="notes" rows="3" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition" placeholder="Let us know if you have any special needs..."></textarea>
@@ -437,16 +478,14 @@
     const renderItinerary = () => {
         return `
             <div class="max-w-4xl mx-auto">
-                <h2 class="text-4xl font-display text-royal-maroon mb-4 text-center">Wedding Celebration</h2>
-                <p class="text-center text-gray-600 mb-10 font-body text-lg">November 29-30, 2025 | Sikar, Rajasthan</p>
-
-                <div class="mb-12 rounded-2xl overflow-hidden shadow-2xl relative">
-                    <div class="video-overlay absolute inset-0 pointer-events-none z-10"></div>
-                    <video controls class="w-full" poster="https://placehold.co/800x450/8B0000/FFFFFF?text=Wedding+Invitation">
-                        <source src="./assets/video-invite.mp4" type="video/mp4">
-                    </video>
+                <h2 class="text-4xl font-display text-royal-maroon mb-4 text-center">Wedding Celebration Schedule</h2>
+                <p class="text-center text-gray-600 mb-10 font-body text-lg">Detailed Schedule for November 29-30, 2025</p>
+                
+                <div class="text-center mb-10">
+                    <p class="text-lg text-gray-700">For detailed dress code, please visit the <button onclick="switchTab('details')" class="font-semibold text-rose-gold underline hover:text-royal-maroon transition">Details & Dress Code</button> tab.</p>
                 </div>
 
+                <!-- Event Schedule -->
                 <div class="space-y-6 mb-12">
                     <div class="glass-card rounded-2xl p-8">
                         <div class="flex items-start gap-6">
@@ -455,14 +494,14 @@
                                 <h3 class="text-2xl font-display text-royal-maroon mb-2">Friday, November 29</h3>
                                 <div class="space-y-3 text-gray-700">
                                     <div class="flex items-center gap-3">
-                                        <i class="fas fa-clock text-gold"></i>
+                                        <i class="fas fa-sun text-gold"></i>
                                         <span><strong>12:15 PM:</strong> Haldi Ceremony</span>
                                     </div>
                                     <div class="flex items-center gap-3">
-                                        <i class="fas fa-music text-gold"></i>
+                                        <i class="fas fa-microphone-alt text-gold"></i>
                                         <span><strong>7:00 PM:</strong> Sangeet Night & Special Performances</span>
                                     </div>
-                                    <p class="text-sm text-gray-600 italic mt-3">Attire: Traditional Indian (Yellow/Orange for Haldi, Indo-Western for Sangeet)</p>
+                                    <p class="text-sm text-gray-600 italic mt-3">Attire: Light/Pastel Colours (No Yellow/Green for Haldi)</p>
                                 </div>
                             </div>
                         </div>
@@ -479,10 +518,10 @@
                                         <span><strong>11:00 AM:</strong> Myra Ceremony</span>
                                     </div>
                                     <div class="flex items-center gap-3">
-                                        <i class="fas fa-heart text-gold"></i>
+                                        <i class="fas fa-crown text-gold"></i>
                                         <span><strong>7:30 PM:</strong> Wedding Ceremony, Reception & Grand Dinner</span>
                                     </div>
-                                    <p class="text-sm text-gray-600 italic mt-3">Attire: Traditional Formal</p>
+                                    <p class="text-sm text-gray-600 italic mt-3">Attire: Traditional Formal / Royal Attire</p>
                                 </div>
                             </div>
                         </div>
@@ -493,6 +532,7 @@
                     <span class="ornament w-8 h-8 inline-block"></span>
                 </div>
 
+                <!-- Venue & Contact -->
                 <div class="grid md:grid-cols-2 gap-6 mt-12">
                     <div class="glass-card rounded-2xl p-8 text-center">
                         <i class="fas fa-map-marker-alt text-4xl text-gold mb-4"></i>
@@ -503,14 +543,84 @@
                         </a>
                     </div>
 
+                    <!-- Coordinator Update (Mobile No. 9743116904) -->
                     <div class="glass-card rounded-2xl p-8 text-center">
                         <i class="fas fa-phone-alt text-4xl text-gold mb-4"></i>
                         <h3 class="text-xl font-display text-royal-maroon mb-3">Contact</h3>
                         <p class="text-gray-700 mb-2">Wedding Coordinator</p>
                         <p class="font-semibold text-lg mb-4">Umesh Pareek</p>
-                        <a href="tel:+919743116903" class="inline-block bg-royal-maroon text-white px-6 py-3 rounded-full hover:bg-opacity-90 transition">
-                            <i class="fas fa-phone mr-2"></i>+91-9743116903
+                        <a href="tel:+919743116904" class="inline-block bg-royal-maroon text-white px-6 py-3 rounded-full hover:bg-opacity-90 transition">
+                            <i class="fas fa-phone mr-2"></i>+91-9743116904
                         </a>
+                    </div>
+                </div>
+            </div>
+        `;
+    };
+
+    // NEW Tab Content: Dress Code & Details
+    const renderDetails = () => {
+        return `
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl font-display text-royal-maroon mb-4 text-center">Details & Dress Code Guide</h2>
+                <p class="text-center text-gray-600 mb-10 font-body text-lg">A quick guide to help you prepare for the festivities.</p>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Dress Code Card -->
+                    <div class="glass-card rounded-2xl p-8">
+                        <h3 class="text-3xl font-display text-rose-gold mb-6 border-b pb-3">Dress Code By Event</h3>
+                        
+                        <div class="space-y-6">
+                            <!-- Haldi -->
+                            <div>
+                                <h4 class="text-xl font-semibold text-royal-maroon mb-1 flex items-center"><i class="fas fa-sun mr-2 w-5 text-gold"></i>Haldi Ceremony</h4>
+                                <p class="text-gray-700 ml-7">**Pastel (Light Colours)**. Please avoid dark yellow or deep green.</p>
+                            </div>
+                            <!-- Sangeet -->
+                            <div>
+                                <h4 class="text-xl font-semibold text-royal-maroon mb-1 flex items-center"><i class="fas fa-music mr-2 w-5 text-gold"></i>Sangeet Night</h4>
+                                <p class="text-gray-700 ml-7">**Bring your glaze and bring the fun!** Indo-Western or Cocktail Attire encouraged.</p>
+                            </div>
+                            <!-- Myra -->
+                            <div>
+                                <h4 class="text-xl font-semibold text-royal-maroon mb-1 flex items-center"><i class="fas fa-hands-helping mr-2 w-5 text-gold"></i>Myra Ceremony</h4>
+                                <p class="text-gray-700 ml-7">**Women**: Traditional Rajputi Dress. **Men**: Ethnic Indian Wear.</p>
+                            </div>
+                            <!-- Wedding -->
+                            <div>
+                                <h4 class="text-xl font-semibold text-royal-maroon mb-1 flex items-center"><i class="fas fa-crown mr-2 w-5 text-gold"></i>Wedding & Reception</h4>
+                                <p class="text-gray-700 ml-7">**Bring the Royal attire out!** Formal Indian Attire (Lehengas, Sherwanis, Suits).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Travel & Logistics Card -->
+                    <div class="glass-card rounded-2xl p-8">
+                        <h3 class="text-3xl font-display text-rose-gold mb-6 border-b pb-3">Travel & Logistics</h3>
+                        
+                        <div class="space-y-4 text-gray-700">
+                            <div class="flex items-start gap-4">
+                                <i class="fas fa-bed text-2xl text-royal-maroon mt-1 flex-shrink-0"></i>
+                                <div>
+                                    <h4 class="font-semibold text-lg">Accommodation</h4>
+                                    <p class="text-sm">Please let us know on the RSVP tab if you require accommodation arrangements near the venue.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <i class="fas fa-plane-departure text-2xl text-royal-maroon mt-1 flex-shrink-0"></i>
+                                <div>
+                                    <h4 class="font-semibold text-lg">Travel Pickups</h4>
+                                    <p class="text-sm">If you need pickup from the Airport or Train Station, please specify details on the RSVP form so we can coordinate your arrival.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <i class="fas fa-gift text-2xl text-royal-maroon mt-1 flex-shrink-0"></i>
+                                <div>
+                                    <h4 class="font-semibold text-lg">Gifting</h4>
+                                    <p class="text-sm">Your presence is the only gift we need! If you still wish to bless us, a blessing in kind is most appreciated.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -524,22 +634,7 @@
                 <h2 class="text-4xl font-display text-royal-maroon mb-8 text-center">Admin Dashboard</h2>
                 
                 <div id="admin-stats" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                    <div class="glass-card rounded-xl p-6 text-center">
-                        <div class="text-3xl font-display font-bold text-royal-maroon">0</div>
-                        <div class="text-sm text-gray-600 mt-2">Total RSVPs</div>
-                    </div>
-                    <div class="glass-card rounded-xl p-6 text-center">
-                        <div class="text-3xl font-display font-bold text-green-600">0</div>
-                        <div class="text-sm text-gray-600 mt-2">Attending</div>
-                    </div>
-                    <div class="glass-card rounded-xl p-6 text-center">
-                        <div class="text-3xl font-display font-bold text-blue-600">0</div>
-                        <div class="text-sm text-gray-600 mt-2">Need Accommodation</div>
-                    </div>
-                    <div class="glass-card rounded-xl p-6 text-center">
-                        <div class="text-3xl font-display font-bold text-purple-600">0</div>
-                        <div class="text-sm text-gray-600 mt-2">Total Guests</div>
-                    </div>
+                    <!-- Stats will be updated by updateAdminStats -->
                 </div>
 
                 <div class="glass-card rounded-2xl p-8">
@@ -563,8 +658,8 @@
                         <button onclick="exportCSV('travel-pickups')" class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-4 rounded-xl transition">
                             <i class="fas fa-car mr-2"></i>Travel Pickups
                         </button>
-                        <button onclick="exportCSV('events')" class="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-4 rounded-xl transition">
-                            <i class="fas fa-calendar mr-2"></i>Event Count
+                        <button onclick="exportCSV('performers')" class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-4 rounded-xl transition">
+                            <i class="fas fa-microphone-alt mr-2"></i>Performers List
                         </button>
                     </div>
                 </div>
@@ -642,13 +737,15 @@
                 name: formData.get('name'),
                 mobile: formData.get('mobile'),
                 email: currentUser.email,
-                side: formData.get('side'), // NEW: Groom/Bride side
+                side: formData.get('side'),
                 attending: formData.get('attending'),
                 events: events,
                 accommodation: formData.get('accommodation'),
                 guests: parseInt(formData.get('guests')) || 1,
-                travelArrangement: formData.get('travelArrangement'), // NEW: Travel type
-                arrivalDate: formData.get('arrivalDate'), // NEW: Arrival date
+                travelArrangement: formData.get('travelArrangement'),
+                arrivalDate: formData.get('arrivalDate'),
+                isPerforming: formData.get('isPerforming') === 'on', // NEW: Checkbox value
+                performanceDetails: formData.get('isPerforming') === 'on' ? formData.get('performanceDetails') : '', // NEW: Performance details
                 notes: formData.get('notes'),
                 timestamp: serverTimestamp(),
                 uid: currentUser.uid
@@ -687,7 +784,8 @@
     // CSV Export
     window.exportCSV = (type) => {
         if (!currentUser || currentUser.email !== ADMIN_EMAIL) {
-            alert('Access denied');
+            console.error('Access denied');
+            // Replaced alert() with console.error
             return;
         }
 
@@ -706,6 +804,8 @@
             Accommodation: r.accommodation,
             Travel_Arrangement: r.travelArrangement || 'None',
             Arrival_Date: r.arrivalDate || 'N/A',
+            Performing: r.isPerforming ? 'Yes' : 'No', // NEW FIELD
+            Performance_Details: r.performanceDetails || '', // NEW FIELD
             Notes: r.notes || ''
         });
 
@@ -742,6 +842,16 @@
                 }));
                 filename = 'Travel_Pickup_Requests';
                 break;
+            case 'performers': // NEW REPORT
+                data = guestResponses.filter(r => r.isPerforming).map(r => ({
+                    Name: r.name,
+                    Side: r.side,
+                    Mobile: r.mobile,
+                    Performance_Details: r.performanceDetails || 'Details not specified',
+                    Event: (r.events || []).join(', ')
+                }));
+                filename = 'Reception_Performers';
+                break;
             case 'events':
                 const eventCounts = { Haldi: 0, Sangeet: 0, Wedding: 0 };
                 guestResponses.forEach(r => {
@@ -757,7 +867,7 @@
         }
 
         if (data.length === 0) {
-            alert('No data to export for this selection.');
+            console.log('No data to export for this selection.');
             return;
         }
 
@@ -776,20 +886,16 @@
         a.click();
         URL.revokeObjectURL(url); 
     };
-
-    // Initialize
-    window.onload = () => {
-        updateCountdown();
-        updateUI();
-    };
 </script>
 
 <div class="min-h-screen royal-pattern py-8 px-4">
     <div class="max-w-6xl mx-auto">
+        <!-- Hero Header -->
         <header class="text-center mb-12">
-            <div class="floating mb-6">
-                <div class="ornament w-20 h-20 mx-auto mb-8"></div>
-            </div>
+            
+            <!-- 1. Ganesha Logo (replaces the top floating ornament) -->
+            <img src="./assets/logo-ganesh.png" alt="Lord Ganesha" class="w-24 h-auto mx-auto mb-6 floating onerror="this.onerror=null;this.src='https://placehold.co/96x96/8B0000/FFFFFF?text=G+Logo'">
+
             
             <div class="mb-4">
                 <p class="text-gold font-sans text-sm uppercase tracking-widest mb-2">You Are Invited To Celebrate</p>
@@ -799,9 +905,10 @@
                 Harsh & Twinkle
             </h1>
             
+            <!-- 1. TH Logo as Separator -->
             <div class="flex items-center justify-center gap-4 mb-8">
                 <div class="h-px w-20 bg-gradient-to-r from-transparent to-gold"></div>
-                <i class="fas fa-heart text-rose-gold text-2xl"></i>
+                <img src="./assets/logo-th.png" alt="TH" class="w-10 h-auto" onerror="this.onerror=null;this.src='https://placehold.co/40x40/B76E79/FFFFFF?text=TH'">
                 <div class="h-px w-20 bg-gradient-to-l from-transparent to-gold"></div>
             </div>
             
@@ -810,17 +917,20 @@
                 <span class="text-base text-gray-600">Sikar, Rajasthan</span>
             </p>
 
+            <!-- Countdown -->
             <div id="countdown" class="mb-8"></div>
 
+            <!-- Family Message (2. Removed Ravindera Kumar) -->
             <div class="glass-card rounded-3xl p-8 md:p-12 max-w-3xl mx-auto">
                 <p class="text-lg md:text-xl font-body text-gray-700 leading-relaxed italic">
-                    With hearts full of joy and gratitude, <strong class="text-royal-maroon">Ravindera Kumar Pareek</strong> and family 
+                    With hearts full of joy and gratitude, the <strong class="text-royal-maroon">Pareek family</strong> 
                     invite you to witness and bless the sacred union of their beloved son <strong class="text-royal-maroon">Harsh</strong> 
                     with <strong class="text-royal-maroon">Twinkle</strong>. Your presence will make this celebration truly complete.
                 </p>
             </div>
         </header>
 
+        <!-- Main App Container -->
         <div id="app-container">
             <div class="glass-card rounded-3xl p-12 text-center max-w-md mx-auto">
                 <div class="ornament w-16 h-16 mx-auto mb-6"></div>
@@ -831,6 +941,7 @@
             </div>
         </div>
 
+        <!-- Footer -->
         <footer class="text-center mt-16 pb-8">
             <div class="ornament w-8 h-8 mx-auto mb-4"></div>
             <p class="text-gray-600 font-body">
