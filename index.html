@@ -26,7 +26,7 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Cormorant+Garamond:wght==300;400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
     <style>
@@ -163,7 +163,7 @@
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, collection, doc, setDoc, query, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    // 🔥 REPLACE WITH YOUR FIREBASE CONFIG
+    // Configuration Constants
     const firebaseConfig = {
         apiKey: "AIzaSyDHFGGH0mvnE0w_qBXD3jorY9VgmUzXSFw",
         authDomain: "harsh-twinkle-2025-3781d-5080d.firebaseapp.com",
@@ -176,16 +176,73 @@
     const ADMIN_EMAIL = "pareeku01@gmail.com";
     const WEDDING_DATE = new Date("November 30, 2025 19:30:00").getTime();
     const RSVP_DEADLINE = "October 30, 2025";
-
+    // 2. Performance RSVP visibility deadline
+    const PERFORMANCE_CUTOFF_DATE = new Date("October 25, 2025").getTime(); 
 
     let db, auth, currentUser;
     let guestResponses = [];
     const appId = firebaseConfig.appId;
+    let currentLanguage = 'en'; // Default language
+
+    // Language Mapping (4. Simple Hindi translation placeholder)
+    const translations = {
+        en: {
+            invite: "You Are Invited To Celebrate",
+            hero: "Harsh & Twinkle",
+            message: "With hearts full of joy and gratitude, the **Pareek family** invite you to witness and bless the sacred union of **Harsh** with **Twinkle**. Your presence will make this celebration truly complete.",
+            rsvp_tab: "RSVP",
+            details_tab: "Itinerary & Dress Code",
+            welcome: "Welcome",
+            signin: "Please sign in to view the invitation and RSVP",
+            // More translations would go here
+        },
+        hi: {
+            invite: "आपको आमंत्रित किया जाता है",
+            hero: "हर्ष और ट्विंकल",
+            message: "अपार हर्ष और कृतज्ञता के साथ, **पारीक परिवार** आपको **हर्ष** और **ट्विंकल** के इस पवित्र मिलन का साक्षी बनने और आशीर्वाद देने के लिए आमंत्रित करता है। आपकी उपस्थिति इस उत्सव को वास्तव में पूर्ण कर देगी।",
+            rsvp_tab: "आरएसवीपी",
+            details_tab: "कार्यक्रम और वेशभूषा",
+            welcome: "स्वागत है",
+            signin: "निमंत्रण और RSVP देखने के लिए कृपया साइन इन करें",
+            // More translations would go here
+        }
+    };
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     db = getFirestore(app);
     auth = getAuth(app);
+    
+    // 4. Function to update all displayed content to the current language
+    const updateLanguageContent = () => {
+        const lang = currentLanguage;
+        const t = translations[lang];
+
+        // Update Header
+        document.getElementById('invite-header').textContent = t.invite;
+        document.getElementById('hero-title').textContent = t.hero;
+        
+        // Update Family Message
+        const msgEl = document.getElementById('family-message-content');
+        if (msgEl) {
+            let htmlMsg = t.message.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            // Safely insert the dynamically styled names (Harsh and Twinkle remain styled)
+            htmlMsg = htmlMsg.replace('**Harsh**', `<strong class="text-royal-maroon">Harsh</strong>`)
+                             .replace('**Twinkle**', `<strong class="text-royal-maroon">Twinkle</strong>`)
+                             .replace('**Pareek family**', `<strong class="text-royal-maroon">Pareek family</strong>`);
+            msgEl.innerHTML = htmlMsg;
+        }
+
+        // Update Tab Buttons (force a UI refresh to update tab titles)
+        updateUI(); 
+    };
+
+    // 4. Language Toggle Function
+    window.toggleLanguage = () => {
+        currentLanguage = currentLanguage === 'en' ? 'hi' : 'en';
+        updateLanguageContent();
+    };
+
 
     // Tab Management
     let activeTab = 'rsvp';
@@ -294,13 +351,14 @@
     const updateUI = () => {
         const container = document.getElementById('app-container');
         const isAdmin = currentUser && currentUser.email === ADMIN_EMAIL;
-        
+        const t = translations[currentLanguage]; // Get current language strings
+
         if (!currentUser) {
             container.innerHTML = `
                 <div class="glass-card rounded-3xl p-12 text-center max-w-md mx-auto">
                     <img src="./assets/logo-ganesh.png" alt="Lord Ganesha" class="w-16 h-auto mx-auto mb-6" onerror="this.onerror=null;this.src='https://placehold.co/96x96/8B0000/FFFFFF?text=G+Logo'">
-                    <h3 class="text-3xl font-display text-royal-maroon mb-4">Welcome</h3>
-                    <p class="text-gray-700 mb-8 font-body text-lg">Please sign in to view the invitation and RSVP</p>
+                    <h3 class="text-3xl font-display text-royal-maroon mb-4">${t.welcome}</h3>
+                    <p class="text-gray-700 mb-8 font-body text-lg">${t.signin}</p>
                     <button onclick="signInWithGoogle()" class="btn-royal text-white px-8 py-4 rounded-full font-sans font-medium shadow-lg w-full">
                         <i class="fab fa-google mr-3"></i>Sign in with Google
                     </button>
@@ -310,6 +368,13 @@
         }
 
         container.innerHTML = `
+            <!-- 4. Language Toggle Button -->
+            <div class="text-right mb-4">
+                <button onclick="toggleLanguage()" class="bg-gold/20 text-royal-maroon px-3 py-1 rounded-full text-sm font-sans font-medium hover:bg-gold/40 transition">
+                    <i class="fas fa-language mr-1"></i> ${currentLanguage === 'en' ? 'Switch to Hindi' : 'अंग्रेजी में बदलें'}
+                </button>
+            </div>
+
             <div class="glass-card rounded-3xl overflow-hidden">
                 <!-- User Header -->
                 <div class="bg-gradient-to-r from-royal-maroon to-rose-gold p-6 text-white">
@@ -328,11 +393,11 @@
                 <div class="border-b border-gray-200 px-6 bg-white/50">
                     <div class="flex gap-2 overflow-x-auto">
                         <button onclick="switchTab('rsvp')" class="tab-button active text-royal-maroon font-semibold px-6 py-4 font-sans">
-                            <i class="fas fa-envelope mr-2"></i>RSVP
+                            <i class="fas fa-envelope mr-2"></i>${t.rsvp_tab}
                         </button>
                         <!-- Consolidated Schedule and Dress Code tab -->
                         <button onclick="switchTab('details')" class="tab-button text-gray-600 px-6 py-4 font-sans">
-                            <i class="fas fa-calendar-alt mr-2"></i>Itinerary & Dress Code
+                            <i class="fas fa-calendar-alt mr-2"></i>${t.details_tab}
                         </button>
                         ${isAdmin ? `<button onclick="switchTab('admin')" class="tab-button text-gray-600 px-6 py-4 font-sans">
                             <i class="fas fa-chart-bar mr-2"></i>Admin
@@ -348,19 +413,25 @@
                 </div>
             </div>
         `;
-        // Ensure the correct tab is active after UI update
+        // Ensure the correct tab is active and language content is set
         if (activeTab) switchTab(activeTab);
+        updateLanguageContent();
     };
 
-    // Helper for Performance input toggle
+    // Helper for Performance input toggle and Dynamic Travel Input
     window.onload = () => {
         updateCountdown();
-        setRsvpDeadline(); // Call the new function to set the deadline
+        setRsvpDeadline(); 
         updateUI();
+        
+        // Event delegation for input changes
         document.addEventListener('change', (e) => {
-            // Performance details toggle logic
-            if (e.target.id === 'isPerforming') {
-                const isChecked = e.target.checked;
+            const isPerformingEl = document.getElementById('isPerforming');
+            const travelArrangementEl = document.querySelector('select[name="travelArrangement"]');
+
+            // Toggle Performance details
+            if (e.target === isPerformingEl) {
+                const isChecked = isPerformingEl.checked;
                 document.getElementById('performanceType').disabled = !isChecked;
                 document.getElementById('performanceTime').disabled = !isChecked;
                 document.getElementById('performanceWhatsapp').disabled = !isChecked;
@@ -368,13 +439,30 @@
                     document.getElementById('performanceType').focus();
                 }
             }
+            
+            // 5. Toggle Travel Destination Input
+            if (e.target === travelArrangementEl) {
+                const travelType = travelArrangementEl.value;
+                const dynamicInput = document.getElementById('dynamicTravelInput');
+                
+                if (travelType === 'Airport' || travelType === 'Train') {
+                    const labelText = travelType === 'Airport' ? 'Airport Name (e.g., Delhi IGI)' : 'Train Station Name (e.g., Sikar Junction)';
+                    dynamicInput.innerHTML = `
+                        <label class="block text-sm font-sans font-medium text-gray-700 mb-2">${labelText} *</label>
+                        <input type="text" name="travelStation" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition" placeholder="${labelText}">
+                    `;
+                } else {
+                    dynamicInput.innerHTML = '';
+                }
+            }
         });
     };
 
     // RSVP Form
     const renderRSVP = () => {
-        // Disable state for performance inputs if the checkbox isn't checked
         const disabledAttr = 'disabled';
+        const now = new Date().getTime();
+        const showPerformance = now >= PERFORMANCE_CUTOFF_DATE;
 
         return `
             <div class="max-w-3xl mx-auto">
@@ -437,34 +525,6 @@
                         </div>
                     </div>
                     
-                    <!-- Reception Performance (New Enhanced Fields) -->
-                    <div class="glass-card p-6 rounded-xl border-2 border-rose-gold/30">
-                        <label class="flex items-center font-sans font-medium text-gray-700 mb-4 cursor-pointer">
-                            <input type="checkbox" name="isPerforming" id="isPerforming" class="w-5 h-5 text-royal-maroon rounded">
-                            <span class="ml-3 font-semibold text-lg text-royal-maroon">I would like to give a performance (Sangeet/Reception)</span>
-                        </label>
-                        <div class="grid md:grid-cols-3 gap-4">
-                            <div>
-                                <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Performance Type</label>
-                                <select name="performanceType" id="performanceType" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition disabled:bg-gray-100" ${disabledAttr}>
-                                    <option value="Dance">Dance</option>
-                                    <option value="Song">Song/Singing</option>
-                                    <option value="Poetry">Poetry/Skit</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Time (minutes)</label>
-                                <input type="number" name="performanceTime" id="performanceTime" min="1" max="10" value="3" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition disabled:bg-gray-100" ${disabledAttr}>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-sans font-medium text-gray-700 mb-2">WhatsApp Contact for Coord.</label>
-                                <input type="tel" name="performanceWhatsapp" id="performanceWhatsapp" placeholder="+91-XXXXXXXXXX" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition disabled:bg-gray-100" ${disabledAttr}>
-                            </div>
-                        </div>
-                    </div>
-
-
                     <!-- Travel & Accommodation -->
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
@@ -480,9 +540,9 @@
                         </div>
                     </div>
                     
-                    <!-- Travel Arrangement Fields -->
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
+                    <!-- Travel Arrangement Fields (3. Added Arrival Time) -->
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="md:col-span-2">
                             <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Travel Arrangement/Pick-up Needed? *</label>
                             <select name="travelArrangement" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
                                 <option value="None">No, self-arranged travel</option>
@@ -492,10 +552,52 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Approximate Arrival Date (for arrangements)</label>
+                            <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Arrival Date</label>
                             <input type="date" name="arrivalDate" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
                         </div>
+                        
+                        <div id="dynamicTravelInput" class="md:col-span-3">
+                            <!-- 5. Dynamic input field for Airport/Station Name will be inserted here by JavaScript -->
+                        </div>
                     </div>
+                    
+                    <!-- 3. Arrival Time Field (moved outside of the grid to ensure it's always visible for date) -->
+                    <div>
+                        <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Approximate Arrival Time</label>
+                        <input type="time" name="arrivalTime" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
+                    </div>
+
+
+                    <!-- 2. Reception Performance (Conditional based on date) -->
+                    <div id="performanceSection" class="space-y-6 ${showPerformance ? '' : 'hidden'}">
+                        <div class="glass-card p-6 rounded-xl border-2 border-rose-gold/30">
+                            <h3 class="text-xl font-display text-royal-maroon mb-4">Sangeet Performance Registration</h3>
+                            <label class="flex items-center font-sans font-medium text-gray-700 mb-4 cursor-pointer">
+                                <input type="checkbox" name="isPerforming" id="isPerforming" class="w-5 h-5 text-royal-maroon rounded">
+                                <span class="ml-3 font-semibold text-lg text-royal-maroon">I would like to give a performance</span>
+                            </label>
+                            <div class="grid md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Performance Type</label>
+                                    <select name="performanceType" id="performanceType" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition disabled:bg-gray-100" ${disabledAttr}>
+                                        <option value="Dance">Dance</option>
+                                        <option value="Song">Song/Singing</option>
+                                        <option value="Poetry">Poetry/Skit</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Time (minutes)</label>
+                                    <input type="number" name="performanceTime" id="performanceTime" min="1" max="10" value="3" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition disabled:bg-gray-100" ${disabledAttr}>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-sans font-medium text-gray-700 mb-2">WhatsApp Contact for Coord.</label>
+                                    <input type="tel" name="performanceWhatsapp" id="performanceWhatsapp" placeholder="+91-XXXXXXXXXX" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition disabled:bg-gray-100" ${disabledAttr}>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
 
                     <div>
                         <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Special Requests or Dietary Requirements</label>
@@ -720,6 +822,8 @@
                 guests: parseInt(formData.get('guests')) || 1,
                 travelArrangement: formData.get('travelArrangement'),
                 arrivalDate: formData.get('arrivalDate'),
+                arrivalTime: formData.get('arrivalTime'), // 3. NEW: Arrival Time
+                travelStation: formData.get('travelStation') || '', // 5. NEW: Station/Airport Name
                 isPerforming: isPerforming,
                 // PERFORMANCE FIELDS
                 performanceType: isPerforming ? formData.get('performanceType') : '',
@@ -760,7 +864,7 @@
         }
     });
 
-    // CSV Export
+    // CSV Export (Updated to include new fields)
     window.exportCSV = (type) => {
         if (!currentUser || currentUser.email !== ADMIN_EMAIL) {
             console.error('Access denied');
@@ -782,6 +886,8 @@
             Accommodation: r.accommodation,
             Travel_Arrangement: r.travelArrangement || 'None',
             Arrival_Date: r.arrivalDate || 'N/A',
+            Arrival_Time: r.arrivalTime || 'N/A', // NEW
+            Travel_Station: r.travelStation || 'N/A', // NEW
             Performing: r.isPerforming ? 'Yes' : 'No', 
             Performance_Type: r.performanceType || '',
             Performance_Time: r.performanceTime || 0,
@@ -817,7 +923,9 @@
                     Mobile: r.mobile,
                     Guests: r.guests,
                     Arrangement_Type: r.travelArrangement,
+                    Station_Name: r.travelStation || 'Not Specified', // NEW
                     Arrival_Date: r.arrivalDate || 'Not Specified',
+                    Arrival_Time: r.arrivalTime || 'Not Specified', // NEW
                     Notes: r.notes || ''
                 }));
                 filename = 'Travel_Pickup_Requests';
@@ -879,10 +987,10 @@
 
             
             <div class="mb-4">
-                <p class="text-gold font-sans text-sm uppercase tracking-widest mb-2">You Are Invited To Celebrate</p>
+                <p id="invite-header" class="text-gold font-sans text-sm uppercase tracking-widest mb-2">You Are Invited To Celebrate</p>
             </div>
             
-            <h1 class="hero-title font-display font-bold mb-6">
+            <h1 id="hero-title" class="hero-title font-display font-bold mb-6">
                 Harsh & Twinkle
             </h1>
             
@@ -901,11 +1009,11 @@
             <!-- Countdown -->
             <div id="countdown" class="mb-8"></div>
 
-            <!-- Family Message -->
+            <!-- Family Message (1. Removed "son" part) -->
             <div class="glass-card rounded-3xl p-8 md:p-12 max-w-3xl mx-auto">
-                <p class="text-lg md:text-xl font-body text-gray-700 leading-relaxed italic">
+                <p id="family-message-content" class="text-lg md:text-xl font-body text-gray-700 leading-relaxed italic">
                     With hearts full of joy and gratitude, the <strong class="text-royal-maroon">Pareek family</strong> 
-                    invite you to witness and bless the sacred union of their beloved son <strong class="text-royal-maroon">Harsh</strong> 
+                    invite you to witness and bless the sacred union of <strong class="text-royal-maroon">Harsh</strong> 
                     with <strong class="text-royal-maroon">Twinkle</strong>. Your presence will make this celebration truly complete.
                 </p>
             </div>
@@ -940,4 +1048,3 @@
 
 </body>
 </html>
-
