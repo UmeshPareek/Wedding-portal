@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harsh ❤️ Twinkle | Wedding Invitation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'royal-maroon': '#8B0000',
+                        'gold': '#D4AF37',
+                        'cream': '#FFF8DC',
+                        'rose-gold': '#B76E79',
+                    },
+                    fontFamily: {
+                        display: ['Playfair Display', 'serif'],
+                        body: ['Cormorant Garamond', 'serif'],
+                        sans: ['Montserrat', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #FFF8DC 0%, #F5E6D3 100%);
+            min-height: 100vh;
+        }
+        
+        .royal-pattern {
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 0, 0, 0.05) 0%, transparent 50%);
+        }
+        
+        .hero-title {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            line-height: 1.1;
+            background: linear-gradient(135deg, #8B0000 0%, #B76E79 50%, #D4AF37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .tab-button {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-button::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #D4AF37, #8B0000);
+            transform: translateX(-50%);
+            transition: width 0.3s ease;
+        }
+        
+        .tab-button.active::before {
+            width: 100%;
+        }
+        
+        .ornament {
+            background: linear-gradient(135deg, #D4AF37 0%, #F4E4C1 100%);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+        
+        .countdown-box {
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.05) 0%, rgba(212, 175, 55, 0.05) 100%);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 8px 32px rgba(139, 0, 0, 0.1);
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .video-overlay {
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.1) 0%, transparent 50%, rgba(212, 175, 55, 0.1) 100%);
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #D4AF37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+        
+        .btn-royal {
+            background: linear-gradient(135deg, #8B0000 0%, #A52A2A 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-royal:hover {
+            background: linear-gradient(135deg, #A52A2A 0%, #8B0000 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(139, 0, 0, 0.3);
+        }
+        
+        .divider {
+            position: relative;
+            text-align: center;
+            margin: 3rem 0;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+        }
+        
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+    </style>
+</head>
+<body class="font-body">
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, doc, setDoc, query, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // 🔥 REPLACE WITH YOUR FIREBASE CONFIG
+    const firebaseConfig = {
+        apiKey: "AIzaSyDHFGGH0mvnE0w_qBXD3jorY9VgmUzXSFw",
+        authDomain: "harsh-twinkle-2025-3781d-5080d.firebaseapp.com",
+        projectId: "harsh-twinkle-2025-3781d-5080d",
+        storageBucket: "harsh-twinkle-2025-3781d-5080d.firebasestorage.app",
+        messagingSenderId: "39339487057",
+        appId: "1:39339487057:web:c8185842450b7b2c666d70"
+     };
+
+    const ADMIN_EMAIL = "pareeku01@gmail.com";
+    const WEDDING_DATE = new Date("November 30, 2025 19:30:00").getTime();
+
+    let db, auth, currentUser;
+    let guestResponses = [];
+    const appId = firebaseConfig.appId;
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+    auth = getAuth(app);
+
+    // Tab Management
+    let activeTab = 'rsvp';
+    
+    window.switchTab = (tabName) => {
+        activeTab = tabName;
+        document.querySelectorAll('.tab-button').forEach(btn => {
+            btn.classList.remove('active', 'text-royal-maroon', 'font-semibold');
+            btn.classList.add('text-gray-600');
+        });
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.add('hidden');
+        });
+        
+        document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+        const activeButton = document.querySelector(`[onclick="switchTab('${tabName}')"]`);
+        activeButton.classList.add('active', 'text-royal-maroon', 'font-semibold');
+        activeButton.classList.remove('text-gray-600');
+    };
+
+    // Countdown Timer
+    const updateCountdown = () => {
+        const now = new Date().getTime();
+        const distance = WEDDING_DATE - now;
+        const el = document.getElementById('countdown');
+        
+        if (!el) return;
+        
+        if (distance < 0) {
+            el.innerHTML = `<div class="text-2xl font-display text-royal-maroon">✨ The Celebration Has Begun! ✨</div>`;
+            return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        el.innerHTML = `
+            <div class="flex gap-4 justify-center flex-wrap">
+                <div class="countdown-box rounded-2xl p-4 min-w-[80px]">
+                    <div class="text-4xl font-display font-bold text-royal-maroon">${days}</div>
+                    <div class="text-xs font-sans uppercase tracking-wider text-gray-600 mt-1">Days</div>
+                </div>
+                <div class="countdown-box rounded-2xl p-4 min-w-[80px]">
+                    <div class="text-4xl font-display font-bold text-royal-maroon">${hours}</div>
+                    <div class="text-xs font-sans uppercase tracking-wider text-gray-600 mt-1">Hours</div>
+                </div>
+                <div class="countdown-box rounded-2xl p-4 min-w-[80px]">
+                    <div class="text-4xl font-display font-bold text-royal-maroon">${minutes}</div>
+                    <div class="text-xs font-sans uppercase tracking-wider text-gray-600 mt-1">Minutes</div>
+                </div>
+                <div class="countdown-box rounded-2xl p-4 min-w-[80px]">
+                    <div class="text-4xl font-display font-bold text-royal-maroon">${seconds}</div>
+                    <div class="text-xs font-sans uppercase tracking-wider text-gray-600 mt-1">Seconds</div>
+                </div>
+            </div>
+        `;
+    };
+
+    setInterval(updateCountdown, 1000);
+
+    // Authentication
+    window.signInWithGoogle = async () => {
+        const provider = new GoogleAuthProvider();
+        try {
+            await signInWithPopup(auth, provider);
+        } catch (error) {
+            console.error("Sign-in error:", error);
+            alert("Sign-in failed. Please try again.");
+        }
+    };
+
+    window.signOutUser = async () => {
+        await signOut(auth);
+    };
+
+    onAuthStateChanged(auth, (user) => {
+        currentUser = user;
+        updateUI();
+        if (user) loadRsvps();
+    });
+
+    // Load RSVPs
+    const loadRsvps = () => {
+        const q = query(collection(db, 'artifacts', appId, 'public', 'data', 'wedding_rsvps'));
+        onSnapshot(q, (snapshot) => {
+            guestResponses = [];
+            snapshot.forEach((doc) => {
+                guestResponses.push({ id: doc.id, ...doc.data() });
+            });
+            updateAdminStats();
+        });
+    };
+
+    // Update UI
+    const updateUI = () => {
+        const container = document.getElementById('app-container');
+        const isAdmin = currentUser && currentUser.email === ADMIN_EMAIL;
+        
+        if (!currentUser) {
+            container.innerHTML = `
+                <div class="glass-card rounded-3xl p-12 text-center max-w-md mx-auto">
+                    <div class="ornament w-16 h-16 mx-auto mb-6"></div>
+                    <h3 class="text-3xl font-display text-royal-maroon mb-4">Welcome</h3>
+                    <p class="text-gray-700 mb-8 font-body text-lg">Please sign in to view the invitation and RSVP</p>
+                    <button onclick="signInWithGoogle()" class="btn-royal text-white px-8 py-4 rounded-full font-sans font-medium shadow-lg w-full">
+                        <i class="fab fa-google mr-3"></i>Sign in with Google
+                    </button>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = `
+            <div class="glass-card rounded-3xl overflow-hidden">
+                <!-- User Header -->
+                <div class="bg-gradient-to-r from-royal-maroon to-rose-gold p-6 text-white">
+                    <div class="flex justify-between items-center flex-wrap gap-4">
+                        <div>
+                            <p class="text-sm opacity-90">Welcome back,</p>
+                            <p class="text-xl font-display font-semibold">${currentUser.displayName || currentUser.email}</p>
+                        </div>
+                        <button onclick="signOutUser()" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-full text-sm transition">
+                            Sign Out
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="border-b border-gray-200 px-6 bg-white/50">
+                    <div class="flex gap-2 overflow-x-auto">
+                        <button onclick="switchTab('rsvp')" class="tab-button active text-royal-maroon font-semibold px-6 py-4 font-sans">
+                            <i class="fas fa-envelope mr-2"></i>RSVP
+                        </button>
+                        <button onclick="switchTab('itinerary')" class="tab-button text-gray-600 px-6 py-4 font-sans">
+                            <i class="fas fa-calendar-alt mr-2"></i>Schedule
+                        </button>
+                        ${isAdmin ? `<button onclick="switchTab('admin')" class="tab-button text-gray-600 px-6 py-4 font-sans">
+                            <i class="fas fa-chart-bar mr-2"></i>Admin
+                        </button>` : ''}
+                    </div>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="p-6 md:p-10">
+                    <div id="tab-rsvp" class="tab-content">${renderRSVP()}</div>
+                    <div id="tab-itinerary" class="tab-content hidden">${renderItinerary()}</div>
+                    ${isAdmin ? `<div id="tab-admin" class="tab-content hidden">${renderAdmin()}</div>` : ''}
+                </div>
+            </div>
+        `;
+    };
+
+    // RSVP Form
+    const renderRSVP = () => {
+        return `
+            <div class="max-w-3xl mx-auto">
+                <h2 class="text-4xl font-display text-royal-maroon mb-8 text-center">Your Presence is Requested</h2>
+                
+                <form id="rsvp-form" class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Full Name *</label>
+                            <input type="text" name="name" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Mobile Number *</label>
+                            <input type="tel" name="mobile" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition" placeholder="+91-XXXXXXXXXX">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Email Address *</label>
+                        <input type="email" name="email" value="${currentUser.email}" readonly class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-gray-50">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Will you attend the wedding? *</label>
+                        <select name="attending" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
+                            <option value="">Select...</option>
+                            <option value="Yes">Yes, I'll be there! 🎉</option>
+                            <option value="No">Regretfully, I cannot attend</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-sans font-medium text-gray-700 mb-3">Which events will you attend? *</label>
+                        <div class="space-y-3">
+                            <label class="flex items-center p-3 rounded-xl hover:bg-gold/10 transition cursor-pointer">
+                                <input type="checkbox" name="events" value="Haldi" class="w-5 h-5 text-royal-maroon rounded">
+                                <span class="ml-3">Nov 29: Haldi Ceremony</span>
+                            </label>
+                            <label class="flex items-center p-3 rounded-xl hover:bg-gold/10 transition cursor-pointer">
+                                <input type="checkbox" name="events" value="Sangeet" class="w-5 h-5 text-royal-maroon rounded">
+                                <span class="ml-3">Nov 29: Sangeet Night</span>
+                            </label>
+                            <label class="flex items-center p-3 rounded-xl hover:bg-gold/10 transition cursor-pointer">
+                                <input type="checkbox" name="events" value="Wedding" class="w-5 h-5 text-royal-maroon rounded">
+                                <span class="ml-3">Nov 30: Wedding Ceremony</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Need Accommodation? *</label>
+                            <select name="accommodation" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
+                                <option value="No">No, I'll arrange my own</option>
+                                <option value="Yes">Yes, please arrange</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Number of Guests</label>
+                            <input type="number" name="guests" min="1" value="1" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Special Requests or Dietary Requirements</label>
+                        <textarea name="notes" rows="3" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition" placeholder="Let us know if you have any special needs..."></textarea>
+                    </div>
+
+                    <div id="form-message" class="hidden"></div>
+
+                    <button type="submit" class="btn-royal w-full py-4 rounded-xl text-white font-sans font-medium text-lg shadow-xl">
+                        Submit RSVP
+                    </button>
+                </form>
+            </div>
+        `;
+    };
+
+    // Itinerary
+    const renderItinerary = () => {
+        return `
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl font-display text-royal-maroon mb-4 text-center">Wedding Celebration</h2>
+                <p class="text-center text-gray-600 mb-10 font-body text-lg">November 29-30, 2025 | Sikar, Rajasthan</p>
+
+                <!-- Video Invitation -->
+                <div class="mb-12 rounded-2xl overflow-hidden shadow-2xl relative">
+                    <div class="video-overlay absolute inset-0 pointer-events-none z-10"></div>
+                    <video controls class="w-full" poster="https://placehold.co/800x450/8B0000/FFFFFF?text=Wedding+Invitation">
+                        <source src="./assets/video-invite.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+                <!-- Event Schedule -->
+                <div class="space-y-6 mb-12">
+                    <div class="glass-card rounded-2xl p-8">
+                        <div class="flex items-start gap-6">
+                            <div class="ornament w-12 h-12 flex-shrink-0"></div>
+                            <div class="flex-1">
+                                <h3 class="text-2xl font-display text-royal-maroon mb-2">Friday, November 29</h3>
+                                <div class="space-y-3 text-gray-700">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-clock text-gold"></i>
+                                        <span><strong>12:15 PM:</strong> Haldi Ceremony</span>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-music text-gold"></i>
+                                        <span><strong>7:00 PM:</strong> Sangeet Night</span>
+                                    </div>
+                                    <p class="text-sm text-gray-600 italic mt-3">Attire: Traditional Indian (Yellow/Orange for Haldi, Indo-Western for Sangeet)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-8">
+                        <div class="flex items-start gap-6">
+                            <div class="ornament w-12 h-12 flex-shrink-0"></div>
+                            <div class="flex-1">
+                                <h3 class="text-2xl font-display text-royal-maroon mb-2">Saturday, November 30</h3>
+                                <div class="space-y-3 text-gray-700">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-hands-helping text-gold"></i>
+                                        <span><strong>11:00 AM:</strong> Myra Ceremony</span>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-heart text-gold"></i>
+                                        <span><strong>7:30 PM:</strong> Wedding Ceremony & Reception</span>
+                                    </div>
+                                    <p class="text-sm text-gray-600 italic mt-3">Attire: Traditional Formal</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider">
+                    <span class="ornament w-8 h-8 inline-block"></span>
+                </div>
+
+                <!-- Venue & Contact -->
+                <div class="grid md:grid-cols-2 gap-6 mt-12">
+                    <div class="glass-card rounded-2xl p-8 text-center">
+                        <i class="fas fa-map-marker-alt text-4xl text-gold mb-4"></i>
+                        <h3 class="text-xl font-display text-royal-maroon mb-3">Venue</h3>
+                        <p class="text-gray-700 mb-4">Govindam Gopinath Sewa Sadan<br>Nehru Garden, Sikar Road<br>Sikar, Rajasthan 332001</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=GOVINDAM+GOPINATH+SEWA+SADAN,+Sikar" target="_blank" class="inline-block bg-royal-maroon text-white px-6 py-3 rounded-full hover:bg-opacity-90 transition">
+                            Get Directions
+                        </a>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-8 text-center">
+                        <i class="fas fa-phone-alt text-4xl text-gold mb-4"></i>
+                        <h3 class="text-xl font-display text-royal-maroon mb-3">Contact</h3>
+                        <p class="text-gray-700 mb-2">Wedding Coordinator</p>
+                        <p class="font-semibold text-lg mb-4">Umesh Pareek</p>
+                        <a href="tel:+919743116903" class="inline-block bg-royal-maroon text-white px-6 py-3 rounded-full hover:bg-opacity-90 transition">
+                            <i class="fas fa-phone mr-2"></i>+91-9743116903
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `;
+    };
+
+    // Admin Dashboard
+    const renderAdmin = () => {
+        return `
+            <div class="max-w-5xl mx-auto">
+                <h2 class="text-4xl font-display text-royal-maroon mb-8 text-center">Admin Dashboard</h2>
+                
+                <div id="admin-stats" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                    <div class="glass-card rounded-xl p-6 text-center">
+                        <div class="text-3xl font-display font-bold text-royal-maroon">0</div>
+                        <div class="text-sm text-gray-600 mt-2">Total RSVPs</div>
+                    </div>
+                    <div class="glass-card rounded-xl p-6 text-center">
+                        <div class="text-3xl font-display font-bold text-green-600">0</div>
+                        <div class="text-sm text-gray-600 mt-2">Attending</div>
+                    </div>
+                    <div class="glass-card rounded-xl p-6 text-center">
+                        <div class="text-3xl font-display font-bold text-blue-600">0</div>
+                        <div class="text-sm text-gray-600 mt-2">Need Accommodation</div>
+                    </div>
+                    <div class="glass-card rounded-xl p-6 text-center">
+                        <div class="text-3xl font-display font-bold text-purple-600">0</div>
+                        <div class="text-sm text-gray-600 mt-2">Total Guests</div>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-8">
+                    <h3 class="text-2xl font-display text-royal-maroon mb-6">Export Reports</h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <button onclick="exportCSV('all')" class="bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded-xl transition">
+                            <i class="fas fa-file-excel mr-2"></i>All RSVPs
+                        </button>
+                        <button onclick="exportCSV('attending')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded-xl transition">
+                            <i class="fas fa-users mr-2"></i>Attending Guests
+                        </button>
+                        <button onclick="exportCSV('accommodation')" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-4 rounded-xl transition">
+                            <i class="fas fa-hotel mr-2"></i>Accommodation Needs
+                        </button>
+                        <button onclick="exportCSV('events')" class="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-4 rounded-xl transition">
+                            <i class="fas fa-calendar mr-2"></i>Event-wise Count
+                        </button>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-8 mt-6">
+                    <h3 class="text-2xl font-display text-royal-maroon mb-4">Recent RSVPs</h3>
+                    <div id="recent-rsvps" class="space-y-3">
+                        <p class="text-gray-500 text-center py-8">No RSVPs yet</p>
+                    </div>
+                </div>
+            </div>
+        `;
+    };
+
+    // Update Admin Stats
+    const updateAdminStats = () => {
+        if (!document.getElementById('admin-stats')) return;
+        
+        const attending = guestResponses.filter(r => r.attending === 'Yes').length;
+        const accommodation = guestResponses.filter(r => r.accommodation === 'Yes').length;
+        const totalGuests = guestResponses.reduce((sum, r) => sum + (parseInt(r.guests) || 1), 0);
+        
+        document.getElementById('admin-stats').innerHTML = `
+            <div class="glass-card rounded-xl p-6 text-center">
+                <div class="text-3xl font-display font-bold text-royal-maroon">${guestResponses.length}</div>
+                <div class="text-sm text-gray-600 mt-2">Total RSVPs</div>
+            </div>
+            <div class="glass-card rounded-xl p-6 text-center">
+                <div class="text-3xl font-display font-bold text-green-600">${attending}</div>
+                <div class="text-sm text-gray-600 mt-2">Attending</div>
+            </div>
+            <div class="glass-card rounded-xl p-6 text-center">
+                <div class="text-3xl font-display font-bold text-blue-600">${accommodation}</div>
+                <div class="text-sm text-gray-600 mt-2">Need Accommodation</div>
+            </div>
+            <div class="glass-card rounded-xl p-6 text-center">
+                <div class="text-3xl font-display font-bold text-purple-600">${totalGuests}</div>
+                <div class="text-sm text-gray-600 mt-2">Total Guests</div>
+            </div>
+        `;
+
+        // Update recent RSVPs
+        const recentDiv = document.getElementById('recent-rsvps');
+        if (recentDiv && guestResponses.length > 0) {
+            recentDiv.innerHTML = guestResponses.slice(-5).reverse().map(r => `
+                <div class="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+                    <div>
+                        <p class="font-semibold">${r.name}</p>
+                        <p class="text-sm text-gray-600">${r.email}</p>
+                    </div>
+                    <span class="px-3 py-1 rounded-full text-sm ${r.attending === 'Yes' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">
+                        ${r.attending === 'Yes' ? 'Attending' : 'Not Attending'}
+                    </span>
+                </div>
+            `).join('');
+        }
+    };
+
+    // Handle RSVP Submit
+    document.addEventListener('submit', async (e) => {
+        if (e.target.id === 'rsvp-form') {
+            e.preventDefault();
+            const form = e.target;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const messageDiv = document.getElementById('form-message');
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            const formData = new FormData(form);
+            const events = [];
+            formData.getAll('events').forEach(e => events.push(e));
+            
+            const data = {
+                name: formData.get('name'),
+                mobile: formData.get('mobile'),
+                email: currentUser.email,
+                attending: formData.get('attending'),
+                events: events,
+                accommodation: formData.get('accommodation'),
+                guests: parseInt(formData.get('guests')) || 1,
+                notes: formData.get('notes'),
+                timestamp: serverTimestamp(),
+                uid: currentUser.uid
+            };
+
+            try {
+                const docId = btoa(currentUser.uid);
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'wedding_rsvps', docId), data, { merge: true });
+                
+                messageDiv.className = 'bg-green-50 border-l-4 border-green-500 p-4 rounded-lg mb-4';
+                messageDiv.innerHTML = `
+                    <p class="font-semibold text-green-800">✨ RSVP Submitted Successfully!</p>
+                    <p class="text-green-700 text-sm mt-1">Thank you for confirming. We can't wait to celebrate with you!</p>
+                `;
+                messageDiv.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    messageDiv.classList.add('hidden');
+                }, 5000);
+                
+            } catch (error) {
+                console.error(error);
+                messageDiv.className = 'bg-red-50 border-l-4 border-red-500 p-4 rounded-lg mb-4';
+                messageDiv.innerHTML = `
+                    <p class="font-semibold text-red-800">Submission Failed</p>
+                    <p class="text-red-700 text-sm mt-1">${error.message}</p>
+                `;
+                messageDiv.classList.remove('hidden');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit RSVP';
+            }
+        }
+    });
+
+    // CSV Export
+    window.exportCSV = (type) => {
+        if (!currentUser || currentUser.email !== ADMIN_EMAIL) {
+            alert('Access denied');
+            return;
+        }
+
+        let data = [];
+        let filename = '';
+        
+        switch(type) {
+            case 'all':
+                data = guestResponses.map(r => ({
+                    Name: r.name,
+                    Email: r.email,
+                    Mobile: r.mobile,
+                    Attending: r.attending,
+                    Events: (r.events || []).join(', '),
+                    Accommodation: r.accommodation,
+                    Guests: r.guests,
+                    Notes: r.notes || ''
+                }));
+                filename = 'All_RSVPs';
+                break;
+            case 'attending':
+                data = guestResponses.filter(r => r.attending === 'Yes').map(r => ({
+                    Name: r.name,
+                    Mobile: r.mobile,
+                    Email: r.email,
+                    Events: (r.events || []).join(', '),
+                    Guests: r.guests
+                }));
+                filename = 'Attending_Guests';
+                break;
+            case 'accommodation':
+                data = guestResponses.filter(r => r.accommodation === 'Yes').map(r => ({
+                    Name: r.name,
+                    Mobile: r.mobile,
+                    Email: r.email,
+                    Guests: r.guests
+                }));
+                filename = 'Accommodation_Required';
+                break;
+            case 'events':
+                const eventCounts = { Haldi: 0, Sangeet: 0, Wedding: 0 };
+                guestResponses.forEach(r => {
+                    if (r.attending === 'Yes' && r.events) {
+                        r.events.forEach(e => {
+                            if (eventCounts[e] !== undefined) eventCounts[e]++;
+                        });
+                    }
+                });
+                data = Object.entries(eventCounts).map(([event, count]) => ({ Event: event, Count: count }));
+                filename = 'Event_Counts';
+                break;
+        }
+
+        if (data.length === 0) {
+            alert('No data to export');
+            return;
+        }
+
+        const headers = Object.keys(data[0]);
+        const csv = [
+            headers.join(','),
+            ...data.map(row => headers.map(h => `"${row[h] || ''}"`).join(','))
+        ].join('\n');
+
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${filename}_${new Date().toISOString().slice(0,10)}.csv`;
+        a.click();
+    };
+
+    // Initialize
+    window.onload = () => {
+        updateCountdown();
+        updateUI();
+    };
+</script>
+
+<div class="min-h-screen royal-pattern py-8 px-4">
+    <div class="max-w-6xl mx-auto">
+        <!-- Hero Header -->
+        <header class="text-center mb-12">
+            <div class="floating mb-6">
+                <div class="ornament w-20 h-20 mx-auto mb-8"></div>
+            </div>
+            
+            <div class="mb-4">
+                <p class="text-gold font-sans text-sm uppercase tracking-widest mb-2">You Are Invited To Celebrate</p>
+            </div>
+            
+            <h1 class="hero-title font-display font-bold mb-6">
+                Harsh & Twinkle
+            </h1>
+            
+            <div class="flex items-center justify-center gap-4 mb-8">
+                <div class="h-px w-20 bg-gradient-to-r from-transparent to-gold"></div>
+                <i class="fas fa-heart text-rose-gold text-2xl"></i>
+                <div class="h-px w-20 bg-gradient-to-l from-transparent to-gold"></div>
+            </div>
+            
+            <p class="text-xl md:text-2xl font-body text-gray-700 mb-8">
+                November 29-30, 2025<br>
+                <span class="text-base text-gray-600">Sikar, Rajasthan</span>
+            </p>
+
+            <!-- Countdown -->
+            <div id="countdown" class="mb-8"></div>
+
+            <!-- Family Message -->
+            <div class="glass-card rounded-3xl p-8 md:p-12 max-w-3xl mx-auto">
+                <p class="text-lg md:text-xl font-body text-gray-700 leading-relaxed italic">
+                    With hearts full of joy and gratitude, <strong class="text-royal-maroon">Ravindera Kumar Pareek</strong> and family 
+                    invite you to witness and bless the sacred union of their beloved son <strong class="text-royal-maroon">Harsh</strong> 
+                    with <strong class="text-royal-maroon">Twinkle</strong>. Your presence will make this celebration truly complete.
+                </p>
+            </div>
+        </header>
+
+        <!-- Main App Container -->
+        <div id="app-container">
+            <div class="glass-card rounded-3xl p-12 text-center max-w-md mx-auto">
+                <div class="ornament w-16 h-16 mx-auto mb-6"></div>
+                <h3 class="text-3xl font-display text-royal-maroon mb-4">Loading...</h3>
+                <div class="flex justify-center">
+                    <div class="animate-spin rounded-full h-12 w-12 border-4 border-gold border-t-transparent"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center mt-16 pb-8">
+            <div class="ornament w-8 h-8 mx-auto mb-4"></div>
+            <p class="text-gray-600 font-body">
+                RSVP by October 20, 2025
+            </p>
+            <p class="text-sm text-gray-500 mt-2">
+                © 2025 Pareek Family | Made with <i class="fas fa-heart text-rose-gold"></i>
+            </p>
+        </footer>
+    </div>
+</div>
+
+</body>
+</html>
