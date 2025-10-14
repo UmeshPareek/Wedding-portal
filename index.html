@@ -19,6 +19,8 @@
                         display: ['Playfair Display', 'serif'],
                         body: ['Cormorant Garamond', 'serif'],
                         sans: ['Montserrat', 'sans-serif'],
+                        // New font for the final message (using a different elegant serif for contrast)
+                        message: ['Playfair Display', 'serif'],
                     },
                 }
             }
@@ -150,7 +152,7 @@
         .divider::after { right: 0; }
         
         .th-logo {
-            width: 100px; 
+            width: 80px; 
             height: auto;
         }
         
@@ -631,7 +633,7 @@
     const renderDetails = () => {
         return `
             <div class="max-w-4xl mx-auto">
-                <h2 class="text-4xl font-display text-royal-maroon mb-4 text-center">Itinerary & Dress Code Guide</h2>
+                <h2 class="text-4xl font-display text-royal-maroon mb-4 select-none text-center">Itinerary & Dress Code Guide</h2>
                 <p class="text-center text-gray-600 mb-10 font-body text-lg">Your guide to all events, times, and suggested attire.</p>
 
                 <!-- Video Invitation -->
@@ -708,8 +710,8 @@
 
                 <!-- Final Message (Moved here and styled italic) -->
                 <div class="mt-12 p-6 max-w-4xl mx-auto bg-rose-gold/10 rounded-2xl border border-rose-gold/30">
-                    <p class="font-sans text-lg text-royal-maroon font-medium italic">
-                        We want you at the wedding! If you are not able to follow the dress code guidelines precisely, <please don't stress about it</strong>>. Just be part of the family and enjoy the wedding.
+                    <p class="font-message text-xl text-royal-maroon italic text-center leading-relaxed">
+                        We want you at the wedding! If you are not able to follow the dress code guidelines precisely, <strong class="font-bold">please don't stress about it</strong>. Just be part of the family and enjoy the wedding.
                     </p>
                 </div>
             </div>
@@ -1071,4 +1073,3 @@
 
 </body>
 </html>
-
