@@ -151,7 +151,7 @@
         
         /* New style to control the size of the TH logo */
         .th-logo {
-            width: 60px; /* Increased size from 40px */
+            width: 80px; /* Increased size to 80px as requested */
             height: auto;
         }
     </style>
@@ -175,7 +175,6 @@
 
     const ADMIN_EMAIL = "pareeku01@gmail.com";
     const WEDDING_DATE = new Date("November 30, 2025 19:30:00").getTime();
-    // 4. RSVP Date Correction
     const RSVP_DEADLINE = "October 30, 2025";
 
 
@@ -246,6 +245,15 @@
             </div>
         `;
     };
+    
+    // Function to dynamically set the RSVP deadline date in the footer
+    const setRsvpDeadline = () => {
+        const deadlineEl = document.getElementById('rsvp-deadline');
+        if (deadlineEl) {
+            deadlineEl.textContent = `RSVP by ${RSVP_DEADLINE}`;
+        }
+    }
+
 
     setInterval(updateCountdown, 1000);
 
@@ -347,9 +355,10 @@
     // Helper for Performance input toggle
     window.onload = () => {
         updateCountdown();
+        setRsvpDeadline(); // Call the new function to set the deadline
         updateUI();
         document.addEventListener('change', (e) => {
-            // 2. Performance details toggle logic
+            // Performance details toggle logic
             if (e.target.id === 'isPerforming') {
                 const isChecked = e.target.checked;
                 document.getElementById('performanceType').disabled = !isChecked;
@@ -428,7 +437,7 @@
                         </div>
                     </div>
                     
-                    <!-- 3. Reception Performance (New Enhanced Fields) -->
+                    <!-- Reception Performance (New Enhanced Fields) -->
                     <div class="glass-card p-6 rounded-xl border-2 border-rose-gold/30">
                         <label class="flex items-center font-sans font-medium text-gray-700 mb-4 cursor-pointer">
                             <input type="checkbox" name="isPerforming" id="isPerforming" class="w-5 h-5 text-royal-maroon rounded">
@@ -503,14 +512,14 @@
         `;
     };
 
-    // 5. Consolidated Itinerary & Dress Code Page (Replaced renderItinerary)
+    // Consolidated Itinerary & Dress Code Page
     const renderDetails = () => {
         return `
             <div class="max-w-4xl mx-auto">
                 <h2 class="text-4xl font-display text-royal-maroon mb-4 text-center">Itinerary & Dress Code Guide</h2>
                 <p class="text-center text-gray-600 mb-10 font-body text-lg">Your guide to all events, times, and suggested attire.</p>
 
-                <!-- 3. Video Invitation -->
+                <!-- Video Invitation -->
                 <div class="mb-12 rounded-2xl overflow-hidden shadow-2xl relative">
                     <div class="video-overlay absolute inset-0 pointer-events-none z-10"></div>
                     <video controls class="w-full" poster="https://placehold.co/800x450/8B0000/FFFFFF?text=Wedding+Invitation">
@@ -559,7 +568,7 @@
                     <span class="ornament w-8 h-8 inline-block"></span>
                 </div>
 
-                <!-- 3. Venue & Contact (Keeping location on this page) -->
+                <!-- Venue & Contact -->
                 <div class="grid md:grid-cols-2 gap-6 mt-12">
                     <div class="glass-card rounded-2xl p-8 text-center">
                         <i class="fas fa-map-marker-alt text-4xl text-gold mb-4"></i>
@@ -570,7 +579,7 @@
                         </a>
                     </div>
 
-                    <!-- 4. Coordinator Update (Mobile No. 9743116904) -->
+                    <!-- Coordinator Update (Mobile No. 9743116904) -->
                     <div class="glass-card rounded-2xl p-8 text-center">
                         <i class="fas fa-phone-alt text-4xl text-gold mb-4"></i>
                         <h3 class="text-xl font-display text-royal-maroon mb-3">Contact</h3>
@@ -580,6 +589,13 @@
                             <i class="fas fa-phone mr-2"></i>+91-9743116904
                         </a>
                     </div>
+                </div>
+
+                <!-- Final Message (Moved here and styled italic) -->
+                <div class="mt-12 p-6 max-w-4xl mx-auto bg-rose-gold/10 rounded-2xl border border-rose-gold/30">
+                    <p class="font-sans text-lg text-royal-maroon font-medium italic">
+                        We want you at the wedding! If you are not able to follow the dress code guidelines precisely, **please don't stress about it**. Just be part of the family and enjoy the wedding.
+                    </p>
                 </div>
             </div>
         `;
@@ -705,7 +721,7 @@
                 travelArrangement: formData.get('travelArrangement'),
                 arrivalDate: formData.get('arrivalDate'),
                 isPerforming: isPerforming,
-                // NEW PERFORMANCE FIELDS
+                // PERFORMANCE FIELDS
                 performanceType: isPerforming ? formData.get('performanceType') : '',
                 performanceTime: isPerforming ? parseInt(formData.get('performanceTime')) || 0 : 0,
                 performanceWhatsapp: isPerforming ? formData.get('performanceWhatsapp') : '',
@@ -858,7 +874,7 @@
         <!-- Hero Header -->
         <header class="text-center mb-12">
             
-            <!-- 1. Ganesha Logo (replaces the top floating ornament) -->
+            <!-- Ganesha Logo -->
             <img src="./assets/logo-ganesh.png" alt="Lord Ganesha" class="w-24 h-auto mx-auto mb-6 floating" onerror="this.onerror=null;this.src='https://placehold.co/96x96/8B0000/FFFFFF?text=G+Logo'">
 
             
@@ -870,10 +886,10 @@
                 Harsh & Twinkle
             </h1>
             
-            <!-- 1. TH Logo as Separator (Zoomed in using .th-logo class) -->
+            <!-- TH Logo as Separator (Size increased via .th-logo CSS) -->
             <div class="flex items-center justify-center gap-4 mb-8">
                 <div class="h-px w-20 bg-gradient-to-r from-transparent to-gold"></div>
-                <img src="./assets/logo-th.png" alt="TH" class="th-logo" onerror="this.onerror=null;this.src='https://placehold.co/60x60/B76E79/FFFFFF?text=TH'">
+                <img src="./assets/logo-th.png" alt="TH" class="th-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/B76E79/FFFFFF?text=TH'">
                 <div class="h-px w-20 bg-gradient-to-l from-transparent to-gold"></div>
             </div>
             
@@ -885,7 +901,7 @@
             <!-- Countdown -->
             <div id="countdown" class="mb-8"></div>
 
-            <!-- Family Message (2. Removed Ravindera Kumar) -->
+            <!-- Family Message -->
             <div class="glass-card rounded-3xl p-8 md:p-12 max-w-3xl mx-auto">
                 <p class="text-lg md:text-xl font-body text-gray-700 leading-relaxed italic">
                     With hearts full of joy and gratitude, the <strong class="text-royal-maroon">Pareek family</strong> 
@@ -894,12 +910,7 @@
                 </p>
             </div>
             
-             <!-- Final Message (4. Added warm message about dress code) -->
-            <div class="mt-8 p-6 max-w-3xl mx-auto bg-rose-gold/10 rounded-2xl border border-rose-gold/30">
-                <p class="font-sans text-base text-royal-maroon font-medium">
-                    We want you at the wedding! If you are not able to follow the dress code guidelines precisely, **please don't stress about it**. Just be part of the family and enjoy the wedding.
-                </p>
-            </div>
+             <!-- Removed the final message from the header. It is now on the Details page. -->
         </header>
 
         <!-- Main App Container -->
@@ -916,8 +927,9 @@
         <!-- Footer -->
         <footer class="text-center mt-16 pb-8">
             <div class="ornament w-8 h-8 mx-auto mb-4"></div>
-            <p class="text-gray-600 font-body">
-                RSVP by ${RSVP_DEADLINE}
+            <!-- FIX: Added ID for JavaScript to insert the dynamic deadline date -->
+            <p id="rsvp-deadline" class="text-gray-600 font-body">
+                <!-- Date will be inserted by JavaScript -->
             </p>
             <p class="text-sm text-gray-500 mt-2">
                 © 2025 Pareek Family | Made with <i class="fas fa-heart text-rose-gold"></i>
@@ -928,3 +940,4 @@
 
 </body>
 </html>
+
