@@ -294,7 +294,6 @@
 
         container.innerHTML = `
             <div class="glass-card rounded-3xl overflow-hidden">
-                <!-- User Header -->
                 <div class="bg-gradient-to-r from-royal-maroon to-rose-gold p-6 text-white">
                     <div class="flex justify-between items-center flex-wrap gap-4">
                         <div>
@@ -307,7 +306,6 @@
                     </div>
                 </div>
 
-                <!-- Tabs -->
                 <div class="border-b border-gray-200 px-6 bg-white/50">
                     <div class="flex gap-2 overflow-x-auto">
                         <button onclick="switchTab('rsvp')" class="tab-button active text-royal-maroon font-semibold px-6 py-4 font-sans">
@@ -322,7 +320,6 @@
                     </div>
                 </div>
 
-                <!-- Tab Content -->
                 <div class="p-6 md:p-10">
                     <div id="tab-rsvp" class="tab-content">${renderRSVP()}</div>
                     <div id="tab-itinerary" class="tab-content hidden">${renderItinerary()}</div>
@@ -354,14 +351,24 @@
                         <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Email Address *</label>
                         <input type="email" name="email" value="${currentUser.email}" readonly class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-gray-50">
                     </div>
-
-                    <div>
-                        <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Will you attend the wedding? *</label>
-                        <select name="attending" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
-                            <option value="">Select...</option>
-                            <option value="Yes">Yes, I'll be there! 🎉</option>
-                            <option value="No">Regretfully, I cannot attend</option>
-                        </select>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Which side are you from? *</label>
+                            <select name="side" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
+                                <option value="">Select...</option>
+                                <option value="Groom">Groom's Side (Harsh)</option>
+                                <option value="Bride">Bride's Side (Twinkle)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Will you attend the wedding? *</label>
+                            <select name="attending" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
+                                <option value="">Select...</option>
+                                <option value="Yes">Yes, I'll be there! 🎉</option>
+                                <option value="No">Regretfully, I cannot attend</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div>
@@ -377,7 +384,7 @@
                             </label>
                             <label class="flex items-center p-3 rounded-xl hover:bg-gold/10 transition cursor-pointer">
                                 <input type="checkbox" name="events" value="Wedding" class="w-5 h-5 text-royal-maroon rounded">
-                                <span class="ml-3">Nov 30: Wedding Ceremony</span>
+                                <span class="ml-3">Nov 30: Wedding Ceremony & Reception</span>
                             </label>
                         </div>
                     </div>
@@ -391,11 +398,26 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Number of Guests</label>
+                            <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Number of Guests (Including you)</label>
                             <input type="number" name="guests" min="1" value="1" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
                         </div>
                     </div>
-
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Travel Arrangement/Pick-up Needed? *</label>
+                            <select name="travelArrangement" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
+                                <option value="None">No, self-arranged travel</option>
+                                <option value="Airport">Pick-up from Airport</option>
+                                <option value="Train">Pick-up from Train Station</option>
+                                <option value="Road">Need Road Travel Assistance</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Approximate Arrival Date (for arrangements)</label>
+                            <input type="date" name="arrivalDate" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
+                        </div>
+                    </div>
                     <div>
                         <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Special Requests or Dietary Requirements</label>
                         <textarea name="notes" rows="3" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition" placeholder="Let us know if you have any special needs..."></textarea>
@@ -418,7 +440,6 @@
                 <h2 class="text-4xl font-display text-royal-maroon mb-4 text-center">Wedding Celebration</h2>
                 <p class="text-center text-gray-600 mb-10 font-body text-lg">November 29-30, 2025 | Sikar, Rajasthan</p>
 
-                <!-- Video Invitation -->
                 <div class="mb-12 rounded-2xl overflow-hidden shadow-2xl relative">
                     <div class="video-overlay absolute inset-0 pointer-events-none z-10"></div>
                     <video controls class="w-full" poster="https://placehold.co/800x450/8B0000/FFFFFF?text=Wedding+Invitation">
@@ -426,7 +447,6 @@
                     </video>
                 </div>
 
-                <!-- Event Schedule -->
                 <div class="space-y-6 mb-12">
                     <div class="glass-card rounded-2xl p-8">
                         <div class="flex items-start gap-6">
@@ -440,7 +460,7 @@
                                     </div>
                                     <div class="flex items-center gap-3">
                                         <i class="fas fa-music text-gold"></i>
-                                        <span><strong>7:00 PM:</strong> Sangeet Night</span>
+                                        <span><strong>7:00 PM:</strong> Sangeet Night & Special Performances</span>
                                     </div>
                                     <p class="text-sm text-gray-600 italic mt-3">Attire: Traditional Indian (Yellow/Orange for Haldi, Indo-Western for Sangeet)</p>
                                 </div>
@@ -460,7 +480,7 @@
                                     </div>
                                     <div class="flex items-center gap-3">
                                         <i class="fas fa-heart text-gold"></i>
-                                        <span><strong>7:30 PM:</strong> Wedding Ceremony & Reception</span>
+                                        <span><strong>7:30 PM:</strong> Wedding Ceremony, Reception & Grand Dinner</span>
                                     </div>
                                     <p class="text-sm text-gray-600 italic mt-3">Attire: Traditional Formal</p>
                                 </div>
@@ -473,7 +493,6 @@
                     <span class="ornament w-8 h-8 inline-block"></span>
                 </div>
 
-                <!-- Venue & Contact -->
                 <div class="grid md:grid-cols-2 gap-6 mt-12">
                     <div class="glass-card rounded-2xl p-8 text-center">
                         <i class="fas fa-map-marker-alt text-4xl text-gold mb-4"></i>
@@ -525,18 +544,27 @@
 
                 <div class="glass-card rounded-2xl p-8">
                     <h3 class="text-2xl font-display text-royal-maroon mb-6">Export Reports</h3>
-                    <div class="grid md:grid-cols-2 gap-4">
+                    <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
                         <button onclick="exportCSV('all')" class="bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded-xl transition">
                             <i class="fas fa-file-excel mr-2"></i>All RSVPs
                         </button>
                         <button onclick="exportCSV('attending')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded-xl transition">
                             <i class="fas fa-users mr-2"></i>Attending Guests
                         </button>
+                        <button onclick="exportCSV('groom-side')" class="bg-red-600 hover:bg-red-700 text-white px-6 py-4 rounded-xl transition">
+                            <i class="fas fa-male mr-2"></i>Groom's Side
+                        </button>
+                        <button onclick="exportCSV('bride-side')" class="bg-pink-600 hover:bg-pink-700 text-white px-6 py-4 rounded-xl transition">
+                            <i class="fas fa-female mr-2"></i>Bride's Side
+                        </button>
                         <button onclick="exportCSV('accommodation')" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-4 rounded-xl transition">
-                            <i class="fas fa-hotel mr-2"></i>Accommodation Needs
+                            <i class="fas fa-hotel mr-2"></i>Accommodation
+                        </button>
+                        <button onclick="exportCSV('travel-pickups')" class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-4 rounded-xl transition">
+                            <i class="fas fa-car mr-2"></i>Travel Pickups
                         </button>
                         <button onclick="exportCSV('events')" class="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-4 rounded-xl transition">
-                            <i class="fas fa-calendar mr-2"></i>Event-wise Count
+                            <i class="fas fa-calendar mr-2"></i>Event Count
                         </button>
                     </div>
                 </div>
@@ -581,11 +609,11 @@
         // Update recent RSVPs
         const recentDiv = document.getElementById('recent-rsvps');
         if (recentDiv && guestResponses.length > 0) {
-            recentDiv.innerHTML = guestResponses.slice(-5).reverse().map(r => `
+             recentDiv.innerHTML = guestResponses.slice(-5).reverse().map(r => `
                 <div class="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
                     <div>
                         <p class="font-semibold">${r.name}</p>
-                        <p class="text-sm text-gray-600">${r.email}</p>
+                        <p class="text-sm text-gray-600">${r.email} - <span class="${r.side === 'Groom' ? 'text-blue-500' : 'text-pink-500'}">${r.side || 'N/A'} Side</span></p>
                     </div>
                     <span class="px-3 py-1 rounded-full text-sm ${r.attending === 'Yes' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">
                         ${r.attending === 'Yes' ? 'Attending' : 'Not Attending'}
@@ -614,10 +642,13 @@
                 name: formData.get('name'),
                 mobile: formData.get('mobile'),
                 email: currentUser.email,
+                side: formData.get('side'), // NEW: Groom/Bride side
                 attending: formData.get('attending'),
                 events: events,
                 accommodation: formData.get('accommodation'),
                 guests: parseInt(formData.get('guests')) || 1,
+                travelArrangement: formData.get('travelArrangement'), // NEW: Travel type
+                arrivalDate: formData.get('arrivalDate'), // NEW: Arrival date
                 notes: formData.get('notes'),
                 timestamp: serverTimestamp(),
                 uid: currentUser.uid
@@ -663,38 +694,53 @@
         let data = [];
         let filename = '';
         
+        // Helper function for mapping all necessary fields
+        const mapRsvpToData = (r) => ({
+            Name: r.name,
+            Side: r.side,
+            Email: r.email,
+            Mobile: r.mobile,
+            Guests: r.guests,
+            Attending: r.attending,
+            Events: (r.events || []).join(', '),
+            Accommodation: r.accommodation,
+            Travel_Arrangement: r.travelArrangement || 'None',
+            Arrival_Date: r.arrivalDate || 'N/A',
+            Notes: r.notes || ''
+        });
+
         switch(type) {
             case 'all':
-                data = guestResponses.map(r => ({
-                    Name: r.name,
-                    Email: r.email,
-                    Mobile: r.mobile,
-                    Attending: r.attending,
-                    Events: (r.events || []).join(', '),
-                    Accommodation: r.accommodation,
-                    Guests: r.guests,
-                    Notes: r.notes || ''
-                }));
+                data = guestResponses.map(mapRsvpToData);
                 filename = 'All_RSVPs';
                 break;
             case 'attending':
-                data = guestResponses.filter(r => r.attending === 'Yes').map(r => ({
-                    Name: r.name,
-                    Mobile: r.mobile,
-                    Email: r.email,
-                    Events: (r.events || []).join(', '),
-                    Guests: r.guests
-                }));
+                data = guestResponses.filter(r => r.attending === 'Yes').map(mapRsvpToData);
                 filename = 'Attending_Guests';
                 break;
+            case 'groom-side': 
+                data = guestResponses.filter(r => r.attending === 'Yes' && r.side === 'Groom').map(mapRsvpToData);
+                filename = 'Groom_Side_Guests';
+                break;
+            case 'bride-side': 
+                data = guestResponses.filter(r => r.attending === 'Yes' && r.side === 'Bride').map(mapRsvpToData);
+                filename = 'Bride_Side_Guests';
+                break;
             case 'accommodation':
-                data = guestResponses.filter(r => r.accommodation === 'Yes').map(r => ({
-                    Name: r.name,
-                    Mobile: r.mobile,
-                    Email: r.email,
-                    Guests: r.guests
-                }));
+                data = guestResponses.filter(r => r.accommodation === 'Yes').map(mapRsvpToData);
                 filename = 'Accommodation_Required';
+                break;
+            case 'travel-pickups':
+                data = guestResponses.filter(r => r.attending === 'Yes' && r.travelArrangement !== 'None').map(r => ({
+                    Name: r.name,
+                    Side: r.side,
+                    Mobile: r.mobile,
+                    Guests: r.guests,
+                    Arrangement_Type: r.travelArrangement,
+                    Arrival_Date: r.arrivalDate || 'Not Specified',
+                    Notes: r.notes || ''
+                }));
+                filename = 'Travel_Pickup_Requests';
                 break;
             case 'events':
                 const eventCounts = { Haldi: 0, Sangeet: 0, Wedding: 0 };
@@ -711,22 +757,24 @@
         }
 
         if (data.length === 0) {
-            alert('No data to export');
+            alert('No data to export for this selection.');
             return;
         }
 
         const headers = Object.keys(data[0]);
+        // CSV generation logic, handles quoting for fields with commas
         const csv = [
             headers.join(','),
-            ...data.map(row => headers.map(h => `"${row[h] || ''}"`).join(','))
+            ...data.map(row => headers.map(h => `"${(row[h] || '').toString().replace(/"/g, '""')}"`).join(','))
         ].join('\n');
 
-        const blob = new Blob([csv], { type: 'text/csv' });
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
         a.download = `${filename}_${new Date().toISOString().slice(0,10)}.csv`;
         a.click();
+        URL.revokeObjectURL(url); 
     };
 
     // Initialize
@@ -738,7 +786,6 @@
 
 <div class="min-h-screen royal-pattern py-8 px-4">
     <div class="max-w-6xl mx-auto">
-        <!-- Hero Header -->
         <header class="text-center mb-12">
             <div class="floating mb-6">
                 <div class="ornament w-20 h-20 mx-auto mb-8"></div>
@@ -763,10 +810,8 @@
                 <span class="text-base text-gray-600">Sikar, Rajasthan</span>
             </p>
 
-            <!-- Countdown -->
             <div id="countdown" class="mb-8"></div>
 
-            <!-- Family Message -->
             <div class="glass-card rounded-3xl p-8 md:p-12 max-w-3xl mx-auto">
                 <p class="text-lg md:text-xl font-body text-gray-700 leading-relaxed italic">
                     With hearts full of joy and gratitude, <strong class="text-royal-maroon">Ravindera Kumar Pareek</strong> and family 
@@ -776,7 +821,6 @@
             </div>
         </header>
 
-        <!-- Main App Container -->
         <div id="app-container">
             <div class="glass-card rounded-3xl p-12 text-center max-w-md mx-auto">
                 <div class="ornament w-16 h-16 mx-auto mb-6"></div>
@@ -787,7 +831,6 @@
             </div>
         </div>
 
-        <!-- Footer -->
         <footer class="text-center mt-16 pb-8">
             <div class="ornament w-8 h-8 mx-auto mb-4"></div>
             <p class="text-gray-600 font-body">
