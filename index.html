@@ -149,10 +149,15 @@
         .divider::before { left: 0; }
         .divider::after { right: 0; }
         
-        /* New style to control the size of the TH logo */
         .th-logo {
-            width: 80px; /* Increased size to 80px as requested */
+            width: 80px; 
             height: auto;
+        }
+        
+        .disabled-form-section {
+            opacity: 0.5;
+            pointer-events: none;
+            filter: grayscale(100%);
         }
     </style>
 </head>
@@ -176,73 +181,19 @@
     const ADMIN_EMAIL = "pareeku01@gmail.com";
     const WEDDING_DATE = new Date("November 30, 2025 19:30:00").getTime();
     const RSVP_DEADLINE = "October 30, 2025";
-    // 2. Performance RSVP visibility deadline
     const PERFORMANCE_CUTOFF_DATE = new Date("October 25, 2025").getTime(); 
 
     let db, auth, currentUser;
     let guestResponses = [];
     const appId = firebaseConfig.appId;
-    let currentLanguage = 'en'; // Default language
-
-    // Language Mapping (4. Simple Hindi translation placeholder)
-    const translations = {
-        en: {
-            invite: "You Are Invited To Celebrate",
-            hero: "Harsh & Twinkle",
-            message: "With hearts full of joy and gratitude, the **Pareek family** invite you to witness and bless the sacred union of **Harsh** with **Twinkle**. Your presence will make this celebration truly complete.",
-            rsvp_tab: "RSVP",
-            details_tab: "Itinerary & Dress Code",
-            welcome: "Welcome",
-            signin: "Please sign in to view the invitation and RSVP",
-            // More translations would go here
-        },
-        hi: {
-            invite: "आपको आमंत्रित किया जाता है",
-            hero: "हर्ष और ट्विंकल",
-            message: "अपार हर्ष और कृतज्ञता के साथ, **पारीक परिवार** आपको **हर्ष** और **ट्विंकल** के इस पवित्र मिलन का साक्षी बनने और आशीर्वाद देने के लिए आमंत्रित करता है। आपकी उपस्थिति इस उत्सव को वास्तव में पूर्ण कर देगी।",
-            rsvp_tab: "आरएसवीपी",
-            details_tab: "कार्यक्रम और वेशभूषा",
-            welcome: "स्वागत है",
-            signin: "निमंत्रण और RSVP देखने के लिए कृपया साइन इन करें",
-            // More translations would go here
-        }
-    };
+    // 1. Language Removal: Removed currentLanguage and translations
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     db = getFirestore(app);
     auth = getAuth(app);
     
-    // 4. Function to update all displayed content to the current language
-    const updateLanguageContent = () => {
-        const lang = currentLanguage;
-        const t = translations[lang];
-
-        // Update Header
-        document.getElementById('invite-header').textContent = t.invite;
-        document.getElementById('hero-title').textContent = t.hero;
-        
-        // Update Family Message
-        const msgEl = document.getElementById('family-message-content');
-        if (msgEl) {
-            let htmlMsg = t.message.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            // Safely insert the dynamically styled names (Harsh and Twinkle remain styled)
-            htmlMsg = htmlMsg.replace('**Harsh**', `<strong class="text-royal-maroon">Harsh</strong>`)
-                             .replace('**Twinkle**', `<strong class="text-royal-maroon">Twinkle</strong>`)
-                             .replace('**Pareek family**', `<strong class="text-royal-maroon">Pareek family</strong>`);
-            msgEl.innerHTML = htmlMsg;
-        }
-
-        // Update Tab Buttons (force a UI refresh to update tab titles)
-        updateUI(); 
-    };
-
-    // 4. Language Toggle Function
-    window.toggleLanguage = () => {
-        currentLanguage = currentLanguage === 'en' ? 'hi' : 'en';
-        updateLanguageContent();
-    };
-
+    // 1. Language Removal: Removed updateLanguageContent and toggleLanguage
 
     // Tab Management
     let activeTab = 'rsvp';
@@ -350,15 +301,15 @@
     // Update UI
     const updateUI = () => {
         const container = document.getElementById('app-container');
-        const isAdmin = currentUser && currentUser.email === ADMIN_EMAIL;
-        const t = translations[currentLanguage]; // Get current language strings
 
+        const isAdmin = currentUser && currentUser.email === ADMIN_EMAIL;
+        
         if (!currentUser) {
             container.innerHTML = `
                 <div class="glass-card rounded-3xl p-12 text-center max-w-md mx-auto">
                     <img src="./assets/logo-ganesh.png" alt="Lord Ganesha" class="w-16 h-auto mx-auto mb-6" onerror="this.onerror=null;this.src='https://placehold.co/96x96/8B0000/FFFFFF?text=G+Logo'">
-                    <h3 class="text-3xl font-display text-royal-maroon mb-4">${t.welcome}</h3>
-                    <p class="text-gray-700 mb-8 font-body text-lg">${t.signin}</p>
+                    <h3 class="text-3xl font-display text-royal-maroon mb-4">Welcome</h3>
+                    <p class="text-gray-700 mb-8 font-body text-lg">Please sign in to view the invitation and RSVP</p>
                     <button onclick="signInWithGoogle()" class="btn-royal text-white px-8 py-4 rounded-full font-sans font-medium shadow-lg w-full">
                         <i class="fab fa-google mr-3"></i>Sign in with Google
                     </button>
@@ -368,13 +319,6 @@
         }
 
         container.innerHTML = `
-            <!-- 4. Language Toggle Button -->
-            <div class="text-right mb-4">
-                <button onclick="toggleLanguage()" class="bg-gold/20 text-royal-maroon px-3 py-1 rounded-full text-sm font-sans font-medium hover:bg-gold/40 transition">
-                    <i class="fas fa-language mr-1"></i> ${currentLanguage === 'en' ? 'Switch to Hindi' : 'अंग्रेजी में बदलें'}
-                </button>
-            </div>
-
             <div class="glass-card rounded-3xl overflow-hidden">
                 <!-- User Header -->
                 <div class="bg-gradient-to-r from-royal-maroon to-rose-gold p-6 text-white">
@@ -393,11 +337,11 @@
                 <div class="border-b border-gray-200 px-6 bg-white/50">
                     <div class="flex gap-2 overflow-x-auto">
                         <button onclick="switchTab('rsvp')" class="tab-button active text-royal-maroon font-semibold px-6 py-4 font-sans">
-                            <i class="fas fa-envelope mr-2"></i>${t.rsvp_tab}
+                            <i class="fas fa-envelope mr-2"></i>RSVP
                         </button>
                         <!-- Consolidated Schedule and Dress Code tab -->
                         <button onclick="switchTab('details')" class="tab-button text-gray-600 px-6 py-4 font-sans">
-                            <i class="fas fa-calendar-alt mr-2"></i>${t.details_tab}
+                            <i class="fas fa-calendar-alt mr-2"></i>Itinerary & Dress Code
                         </button>
                         ${isAdmin ? `<button onclick="switchTab('admin')" class="tab-button text-gray-600 px-6 py-4 font-sans">
                             <i class="fas fa-chart-bar mr-2"></i>Admin
@@ -413,12 +357,75 @@
                 </div>
             </div>
         `;
-        // Ensure the correct tab is active and language content is set
+        // Ensure the correct tab is active 
         if (activeTab) switchTab(activeTab);
-        updateLanguageContent();
     };
 
-    // Helper for Performance input toggle and Dynamic Travel Input
+    // Helper functions for dynamic input changes
+    window.updateRsvpFormState = () => {
+        const attendingEl = document.querySelector('select[name="attending"]');
+        const rsvpSections = document.getElementById('rsvpDynamicSections');
+        const isAttending = attendingEl.value === 'Yes';
+
+        // 3. Hide/Show dynamic sections based on attendance
+        if (isAttending) {
+            rsvpSections.classList.remove('disabled-form-section');
+            rsvpSections.classList.remove('hidden');
+        } else if (attendingEl.value === 'No') {
+            // Show the section but immediately disable it to allow direct submission
+            rsvpSections.classList.add('hidden');
+        } else {
+            // Default state (select...)
+            rsvpSections.classList.add('disabled-form-section');
+        }
+
+        // Trigger travel input update if attending state changes, to reset dynamic input visibility
+        const travelArrangementEl = document.querySelector('select[name="travelArrangement"]');
+        if (travelArrangementEl) {
+            updateTravelInput(travelArrangementEl.value);
+        }
+    };
+    
+    window.updateTravelInput = (travelType) => {
+        const dynamicInput = document.getElementById('dynamicTravelInput');
+        
+        // 5. Toggle Dynamic Travel Destination Input
+        if (travelType === 'Airport' || travelType === 'Train') {
+            const labelText = travelType === 'Airport' ? 'Airport Name (e.g., Delhi IGI)' : 'Train Station Name (e.g., Sikar Junction)';
+            dynamicInput.innerHTML = `
+                <label class="block text-sm font-sans font-medium text-gray-700 mb-2">${labelText} *</label>
+                <input type="text" name="travelStation" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition" placeholder="${labelText}">
+            `;
+        } else {
+            dynamicInput.innerHTML = '';
+        }
+    };
+
+    window.togglePerformanceInputs = (isChecked) => {
+        document.getElementById('performanceType').disabled = !isChecked;
+        document.getElementById('performanceTime').disabled = !isChecked;
+        document.getElementById('performanceWhatsapp').disabled = !isChecked;
+        if (isChecked) {
+            document.getElementById('performanceType').focus();
+        }
+    };
+
+    window.copyMobileToWhatsapp = (checkbox) => {
+        const mobileInput = document.querySelector('input[name="mobile"]');
+        const whatsappInput = document.querySelector('input[name="whatsapp"]');
+
+        if (checkbox.checked) {
+            whatsappInput.value = mobileInput.value;
+            whatsappInput.setAttribute('readonly', true);
+            whatsappInput.classList.add('bg-gray-50');
+        } else {
+            whatsappInput.removeAttribute('readonly');
+            whatsappInput.classList.remove('bg-gray-50');
+            whatsappInput.value = '';
+        }
+    };
+
+
     window.onload = () => {
         updateCountdown();
         setRsvpDeadline(); 
@@ -426,34 +433,27 @@
         
         // Event delegation for input changes
         document.addEventListener('change', (e) => {
-            const isPerformingEl = document.getElementById('isPerforming');
-            const travelArrangementEl = document.querySelector('select[name="travelArrangement"]');
+            // 3. Attendance check (must run first to hide sections)
+            if (e.target.name === 'attending') {
+                updateRsvpFormState();
+            }
 
-            // Toggle Performance details
-            if (e.target === isPerformingEl) {
-                const isChecked = isPerformingEl.checked;
-                document.getElementById('performanceType').disabled = !isChecked;
-                document.getElementById('performanceTime').disabled = !isChecked;
-                document.getElementById('performanceWhatsapp').disabled = !isChecked;
-                if (isChecked) {
-                    document.getElementById('performanceType').focus();
-                }
+            // Performance details toggle logic
+            if (e.target.id === 'isPerforming') {
+                togglePerformanceInputs(e.target.checked);
             }
             
-            // 5. Toggle Travel Destination Input
-            if (e.target === travelArrangementEl) {
-                const travelType = travelArrangementEl.value;
-                const dynamicInput = document.getElementById('dynamicTravelInput');
-                
-                if (travelType === 'Airport' || travelType === 'Train') {
-                    const labelText = travelType === 'Airport' ? 'Airport Name (e.g., Delhi IGI)' : 'Train Station Name (e.g., Sikar Junction)';
-                    dynamicInput.innerHTML = `
-                        <label class="block text-sm font-sans font-medium text-gray-700 mb-2">${labelText} *</label>
-                        <input type="text" name="travelStation" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition" placeholder="${labelText}">
-                    `;
-                } else {
-                    dynamicInput.innerHTML = '';
-                }
+            // 5. Travel Destination Input toggle
+            if (e.target.name === 'travelArrangement') {
+                updateTravelInput(e.target.value);
+            }
+        });
+        
+        // Initial form state setup (needed in case the form is rendered via updateUI)
+        document.addEventListener('DOMContentLoaded', () => {
+            const attendingEl = document.querySelector('select[name="attending"]');
+            if (attendingEl) {
+                updateRsvpFormState();
             }
         });
     };
@@ -469,140 +469,153 @@
                 <h2 class="text-4xl font-display text-royal-maroon mb-8 text-center">Your Presence is Requested</h2>
                 
                 <form id="rsvp-form" class="space-y-6">
-                    <!-- Basic Info -->
+                    <!-- Basic Info & Attendance (Visible to everyone) -->
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Full Name *</label>
                             <input type="text" name="name" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
                         </div>
                         <div>
+                            <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Email Address *</label>
+                            <input type="email" name="email" value="${currentUser.email}" readonly class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-gray-50">
+                        </div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
                             <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Mobile Number *</label>
                             <input type="tel" name="mobile" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition" placeholder="+91-XXXXXXXXXX">
                         </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Email Address *</label>
-                        <input type="email" name="email" value="${currentUser.email}" readonly class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-gray-50">
-                    </div>
-                    
-                    <!-- Side and Attendance -->
-                    <div class="grid md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Which side are you from? *</label>
-                            <select name="side" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
-                                <option value="">Select...</option>
-                                <option value="Groom">Groom's Side (Harsh)</option>
-                                <option value="Bride">Bride's Side (Twinkle)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Will you attend the wedding? *</label>
-                            <select name="attending" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
-                                <option value="">Select...</option>
-                                <option value="Yes">Yes, I'll be there! 🎉</option>
-                                <option value="No">Regretfully, I cannot attend</option>
-                            </select>
+                            <label class="block text-sm font-sans font-medium text-gray-700 mb-2">WhatsApp Number *</label>
+                            <input type="tel" name="whatsapp" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition" placeholder="+91-XXXXXXXXXX">
+                            <label class="flex items-center mt-2 text-sm text-gray-600">
+                                <input type="checkbox" onchange="copyMobileToWhatsapp(this)" class="w-4 h-4 text-royal-maroon rounded mr-2">
+                                Same as Mobile Number
+                            </label>
                         </div>
                     </div>
 
-                    <!-- Events Checkbox -->
+                    <!-- Attendance Selector -->
                     <div>
-                        <label class="block text-sm font-sans font-medium text-gray-700 mb-3">Which events will you attend? *</label>
-                        <div class="space-y-3">
-                            <label class="flex items-center p-3 rounded-xl hover:bg-gold/10 transition cursor-pointer">
-                                <input type="checkbox" name="events" value="Haldi" class="w-5 h-5 text-royal-maroon rounded">
-                                <span class="ml-3">Nov 29: Haldi Ceremony</span>
-                            </label>
-                            <label class="flex items-center p-3 rounded-xl hover:bg-gold/10 transition cursor-pointer">
-                                <input type="checkbox" name="events" value="Sangeet" class="w-5 h-5 text-royal-maroon rounded">
-                                <span class="ml-3">Nov 29: Sangeet Night & Performances</span>
-                            </label>
-                            <label class="flex items-center p-3 rounded-xl hover:bg-gold/10 transition cursor-pointer">
-                                <input type="checkbox" name="events" value="Wedding" class="w-5 h-5 text-royal-maroon rounded">
-                                <span class="ml-3">Nov 30: Wedding Ceremony & Reception</span>
-                            </label>
-                        </div>
+                        <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Will you attend the wedding? *</label>
+                        <select name="attending" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
+                            <option value="">Select...</option>
+                            <option value="Yes">Yes, I'll be there! 🎉</option>
+                            <option value="No">Regretfully, I cannot attend</option>
+                        </select>
                     </div>
-                    
-                    <!-- Travel & Accommodation -->
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Need Accommodation? *</label>
-                            <select name="accommodation" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
-                                <option value="No">No, I'll arrange my own</option>
-                                <option value="Yes">Yes, please arrange</option>
-                            </select>
+
+                    <!-- Dynamic Content Sections (3. Hidden/Disabled until attendance is confirmed) -->
+                    <div id="rsvpDynamicSections" class="space-y-6">
+
+                        <!-- Side and Guests -->
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Which side are you from? *</label>
+                                <select name="side" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
+                                    <option value="">Select...</option>
+                                    <option value="Groom">Groom's Side (Harsh)</option>
+                                    <option value="Bride">Bride's Side (Twinkle)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Number of Guests (Including you)</label>
+                                <input type="number" name="guests" min="1" value="1" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
+                            </div>
                         </div>
+
+                        <!-- Events Checkbox -->
                         <div>
-                            <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Number of Guests (Including you)</label>
-                            <input type="number" name="guests" min="1" value="1" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
-                        </div>
-                    </div>
-                    
-                    <!-- Travel Arrangement Fields (3. Added Arrival Time) -->
-                    <div class="grid md:grid-cols-3 gap-6">
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Travel Arrangement/Pick-up Needed? *</label>
-                            <select name="travelArrangement" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
-                                <option value="None">No, self-arranged travel</option>
-                                <option value="Airport">Pick-up from Airport</option>
-                                <option value="Train">Pick-up from Train Station</option>
-                                <option value="Road">Need Road Travel Assistance</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Arrival Date</label>
-                            <input type="date" name="arrivalDate" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
+                            <label class="block text-sm font-sans font-medium text-gray-700 mb-3">Which events will you attend? *</label>
+                            <div class="space-y-3">
+                                <label class="flex items-center p-3 rounded-xl hover:bg-gold/10 transition cursor-pointer">
+                                    <input type="checkbox" name="events" value="Haldi" class="w-5 h-5 text-royal-maroon rounded">
+                                    <span class="ml-3">Nov 29: Haldi Ceremony</span>
+                                </label>
+                                <label class="flex items-center p-3 rounded-xl hover:bg-gold/10 transition cursor-pointer">
+                                    <input type="checkbox" name="events" value="Sangeet" class="w-5 h-5 text-royal-maroon rounded">
+                                    <span class="ml-3">Nov 29: Sangeet Night & Performances</span>
+                                </label>
+                                <label class="flex items-center p-3 rounded-xl hover:bg-gold/10 transition cursor-pointer">
+                                    <input type="checkbox" name="events" value="Wedding" class="w-5 h-5 text-royal-maroon rounded">
+                                    <span class="ml-3">Nov 30: Wedding Ceremony & Reception</span>
+                                </label>
+                            </div>
                         </div>
                         
-                        <div id="dynamicTravelInput" class="md:col-span-3">
-                            <!-- 5. Dynamic input field for Airport/Station Name will be inserted here by JavaScript -->
+                        <!-- Travel & Accommodation -->
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Need Accommodation? *</label>
+                                <select name="accommodation" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
+                                    <option value="No">No, I'll arrange my own</option>
+                                    <option value="Yes">Yes, please arrange</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <!-- 3. Arrival Time Field (moved outside of the grid to ensure it's always visible for date) -->
-                    <div>
-                        <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Approximate Arrival Time</label>
-                        <input type="time" name="arrivalTime" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
-                    </div>
-
-
-                    <!-- 2. Reception Performance (Conditional based on date) -->
-                    <div id="performanceSection" class="space-y-6 ${showPerformance ? '' : 'hidden'}">
-                        <div class="glass-card p-6 rounded-xl border-2 border-rose-gold/30">
-                            <h3 class="text-xl font-display text-royal-maroon mb-4">Sangeet Performance Registration</h3>
-                            <label class="flex items-center font-sans font-medium text-gray-700 mb-4 cursor-pointer">
-                                <input type="checkbox" name="isPerforming" id="isPerforming" class="w-5 h-5 text-royal-maroon rounded">
-                                <span class="ml-3 font-semibold text-lg text-royal-maroon">I would like to give a performance</span>
-                            </label>
-                            <div class="grid md:grid-cols-3 gap-4">
-                                <div>
-                                    <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Performance Type</label>
-                                    <select name="performanceType" id="performanceType" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition disabled:bg-gray-100" ${disabledAttr}>
-                                        <option value="Dance">Dance</option>
-                                        <option value="Song">Song/Singing</option>
-                                        <option value="Poetry">Poetry/Skit</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Time (minutes)</label>
-                                    <input type="number" name="performanceTime" id="performanceTime" min="1" max="10" value="3" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition disabled:bg-gray-100" ${disabledAttr}>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-sans font-medium text-gray-700 mb-2">WhatsApp Contact for Coord.</label>
-                                    <input type="tel" name="performanceWhatsapp" id="performanceWhatsapp" placeholder="+91-XXXXXXXXXX" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition disabled:bg-gray-100" ${disabledAttr}>
+                        
+                        <!-- Travel Arrangement Fields -->
+                        <div class="grid md:grid-cols-3 gap-6">
+                            <div class="md:col-span-1">
+                                <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Pick-up Needed? *</label>
+                                <select name="travelArrangement" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
+                                    <option value="None">No, self-arranged travel</option>
+                                    <option value="Airport">Pick-up from Airport</option>
+                                    <option value="Train">Pick-up from Train Station</option>
+                                    <option value="Road">Need Road Travel Assistance</option>
+                                </select>
+                            </div>
+                            <div class="md:col-span-1">
+                                <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Arrival Date</label>
+                                <input type="date" name="arrivalDate" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
+                            </div>
+                            <div class="md:col-span-1">
+                                <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Approximate Arrival Time</label>
+                                <input type="time" name="arrivalTime" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition">
+                            </div>
+                            
+                            <div id="dynamicTravelInput" class="md:col-span-3">
+                                <!-- Dynamic input field for Airport/Station Name will be inserted here by JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <!-- Reception Performance (Conditional based on date) -->
+                        <div id="performanceSection" class="space-y-6 ${showPerformance ? '' : 'hidden'}">
+                            <div class="glass-card p-6 rounded-xl border-2 border-rose-gold/30">
+                                <h3 class="text-xl font-display text-royal-maroon mb-4">Sangeet Performance Registration</h3>
+                                <label class="flex items-center font-sans font-medium text-gray-700 mb-4 cursor-pointer">
+                                    <input type="checkbox" name="isPerforming" id="isPerforming" class="w-5 h-5 text-royal-maroon rounded">
+                                    <span class="ml-3 font-semibold text-lg text-royal-maroon">I would like to give a performance</span>
+                                </label>
+                                <div class="grid md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Performance Type</label>
+                                        <select name="performanceType" id="performanceType" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition disabled:bg-gray-100" ${disabledAttr}>
+                                            <option value="Dance">Dance</option>
+                                            <option value="Song">Song/Singing</option>
+                                            <option value="Poetry">Poetry/Skit</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Time (minutes)</label>
+                                        <input type="number" name="performanceTime" id="performanceTime" min="1" max="10" value="3" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition disabled:bg-gray-100" ${disabledAttr}>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-sans font-medium text-gray-700 mb-2">WhatsApp Contact for Coord.</label>
+                                        <input type="tel" name="performanceWhatsapp" id="performanceWhatsapp" placeholder="+91-XXXXXXXXXX" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition disabled:bg-gray-100" ${disabledAttr}>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
+                        
 
-                    <div>
-                        <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Special Requests or Dietary Requirements</label>
-                        <textarea name="notes" rows="3" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition" placeholder="Let us know if you have any special needs..."></textarea>
-                    </div>
+                        <div>
+                            <label class="block text-sm font-sans font-medium text-gray-700 mb-2">Special Requests or Dietary Requirements</label>
+                            <textarea name="notes" rows="3" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 transition" placeholder="Let us know if you have any special needs..."></textarea>
+                        </div>
+                    </div> <!-- End rsvpDynamicSections -->
 
                     <div id="form-message" class="hidden"></div>
 
@@ -703,7 +716,7 @@
         `;
     };
 
-    // Admin Dashboard
+    // Admin Dashboard (CSV Export logic is updated to include new fields)
     const renderAdmin = () => {
         return `
             <div class="max-w-5xl mx-auto">
@@ -750,7 +763,7 @@
         `;
     };
 
-    // Update Admin Stats
+    // Update Admin Stats (Unchanged)
     const updateAdminStats = () => {
         if (!document.getElementById('admin-stats')) return;
         
@@ -794,7 +807,7 @@
         }
     };
 
-    // Handle RSVP Submit
+    // Handle RSVP Submit (Updated to include WhatsApp and conditional logic)
     document.addEventListener('submit', async (e) => {
         if (e.target.id === 'rsvp-form') {
             e.preventDefault();
@@ -809,30 +822,39 @@
             const events = [];
             formData.getAll('events').forEach(e => events.push(e));
             
+            const isAttending = formData.get('attending') === 'Yes';
             const isPerforming = formData.get('isPerforming') === 'on';
 
-            const data = {
+            // Constructing data based on attendance
+            const baseData = {
                 name: formData.get('name'),
                 mobile: formData.get('mobile'),
+                whatsapp: formData.get('whatsapp'), // NEW: WhatsApp
                 email: currentUser.email,
-                side: formData.get('side'),
                 attending: formData.get('attending'),
+                notes: formData.get('notes'),
+                timestamp: serverTimestamp(),
+                uid: currentUser.uid
+            };
+
+            const attendingData = {
+                side: formData.get('side'),
                 events: events,
                 accommodation: formData.get('accommodation'),
                 guests: parseInt(formData.get('guests')) || 1,
                 travelArrangement: formData.get('travelArrangement'),
                 arrivalDate: formData.get('arrivalDate'),
-                arrivalTime: formData.get('arrivalTime'), // 3. NEW: Arrival Time
-                travelStation: formData.get('travelStation') || '', // 5. NEW: Station/Airport Name
+                arrivalTime: formData.get('arrivalTime'), 
+                travelStation: formData.get('travelStation') || '', 
                 isPerforming: isPerforming,
-                // PERFORMANCE FIELDS
                 performanceType: isPerforming ? formData.get('performanceType') : '',
                 performanceTime: isPerforming ? parseInt(formData.get('performanceTime')) || 0 : 0,
                 performanceWhatsapp: isPerforming ? formData.get('performanceWhatsapp') : '',
-                notes: formData.get('notes'),
-                timestamp: serverTimestamp(),
-                uid: currentUser.uid
             };
+            
+            // Merge data based on attendance status
+            const data = isAttending ? {...baseData, ...attendingData} : baseData;
+
 
             try {
                 const docId = btoa(currentUser.uid);
@@ -841,7 +863,7 @@
                 messageDiv.className = 'bg-green-50 border-l-4 border-green-500 p-4 rounded-lg mb-4';
                 messageDiv.innerHTML = `
                     <p class="font-semibold text-green-800">✨ RSVP Submitted Successfully!</p>
-                    <p class="text-green-700 text-sm mt-1">Thank you for confirming. We can't wait to celebrate with you!</p>
+                    <p class="text-green-700 text-sm mt-1">${isAttending ? 'Thank you for confirming. We can\'t wait to celebrate with you!' : 'We are sorry you can\'t make it, but we appreciate you letting us know!'}</p>
                 `;
                 messageDiv.classList.remove('hidden');
                 
@@ -864,7 +886,7 @@
         }
     });
 
-    // CSV Export (Updated to include new fields)
+    // CSV Export (Updated to include WhatsApp)
     window.exportCSV = (type) => {
         if (!currentUser || currentUser.email !== ADMIN_EMAIL) {
             console.error('Access denied');
@@ -877,17 +899,18 @@
         // Helper function for mapping all necessary fields
         const mapRsvpToData = (r) => ({
             Name: r.name,
-            Side: r.side,
+            Side: r.side || 'N/A', // Null safe
             Email: r.email,
             Mobile: r.mobile,
-            Guests: r.guests,
+            WhatsApp: r.whatsapp || 'N/A', // NEW
+            Guests: r.guests || 1,
             Attending: r.attending,
             Events: (r.events || []).join(', '),
-            Accommodation: r.accommodation,
-            Travel_Arrangement: r.travelArrangement || 'None',
+            Accommodation: r.accommodation || 'N/A',
+            Travel_Arrangement: r.travelArrangement || 'N/A',
             Arrival_Date: r.arrivalDate || 'N/A',
-            Arrival_Time: r.arrivalTime || 'N/A', // NEW
-            Travel_Station: r.travelStation || 'N/A', // NEW
+            Arrival_Time: r.arrivalTime || 'N/A', 
+            Travel_Station: r.travelStation || 'N/A',
             Performing: r.isPerforming ? 'Yes' : 'No', 
             Performance_Type: r.performanceType || '',
             Performance_Time: r.performanceTime || 0,
@@ -921,11 +944,12 @@
                     Name: r.name,
                     Side: r.side,
                     Mobile: r.mobile,
+                    WhatsApp: r.whatsapp || 'N/A',
                     Guests: r.guests,
                     Arrangement_Type: r.travelArrangement,
-                    Station_Name: r.travelStation || 'Not Specified', // NEW
+                    Station_Name: r.travelStation || 'Not Specified', 
                     Arrival_Date: r.arrivalDate || 'Not Specified',
-                    Arrival_Time: r.arrivalTime || 'Not Specified', // NEW
+                    Arrival_Time: r.arrivalTime || 'Not Specified', 
                     Notes: r.notes || ''
                 }));
                 filename = 'Travel_Pickup_Requests';
@@ -935,6 +959,7 @@
                     Name: r.name,
                     Side: r.side,
                     Mobile: r.mobile,
+                    WhatsApp: r.whatsapp || 'N/A',
                     Performance_Type: r.performanceType || 'Unspecified',
                     Performance_Time_Min: r.performanceTime || 0,
                     Performance_WhatsApp: r.performanceWhatsapp || 'None provided',
@@ -987,10 +1012,10 @@
 
             
             <div class="mb-4">
-                <p id="invite-header" class="text-gold font-sans text-sm uppercase tracking-widest mb-2">You Are Invited To Celebrate</p>
+                <p class="text-gold font-sans text-sm uppercase tracking-widest mb-2">You Are Invited To Celebrate</p>
             </div>
             
-            <h1 id="hero-title" class="hero-title font-display font-bold mb-6">
+            <h1 class="hero-title font-display font-bold mb-6">
                 Harsh & Twinkle
             </h1>
             
@@ -1009,7 +1034,7 @@
             <!-- Countdown -->
             <div id="countdown" class="mb-8"></div>
 
-            <!-- Family Message (1. Removed "son" part) -->
+            <!-- Family Message -->
             <div class="glass-card rounded-3xl p-8 md:p-12 max-w-3xl mx-auto">
                 <p id="family-message-content" class="text-lg md:text-xl font-body text-gray-700 leading-relaxed italic">
                     With hearts full of joy and gratitude, the <strong class="text-royal-maroon">Pareek family</strong> 
@@ -1017,8 +1042,6 @@
                     with <strong class="text-royal-maroon">Twinkle</strong>. Your presence will make this celebration truly complete.
                 </p>
             </div>
-            
-             <!-- Removed the final message from the header. It is now on the Details page. -->
         </header>
 
         <!-- Main App Container -->
@@ -1048,3 +1071,4 @@
 
 </body>
 </html>
+
